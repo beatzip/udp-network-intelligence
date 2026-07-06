@@ -10,8 +10,9 @@ from uni.app.config import AppConfig
 from uni.services.event_bus import EventBus
 
 # Ensure QApplication exists before any widget imports.
-# On headless Linux CI (no libEGL), skip gracefully so the rest
-# of the test suite can still collect and run.
+# On headless Linux CI, QT_QPA_PLATFORM=offscreen is set in the
+# workflow.  If that still fails (missing libs, etc.) we catch the
+# exception so the rest of the test suite can collect and run.
 _qapp = None
 
 
@@ -22,7 +23,7 @@ def _ensure_qapp() -> None:
             from PySide6.QtWidgets import QApplication
 
             _qapp = QApplication.instance() or QApplication(sys.argv)
-        except (ImportError, OSError):
+        except (ImportError, OSError, RuntimeError):
             pass
 
 

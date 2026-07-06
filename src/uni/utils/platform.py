@@ -19,12 +19,12 @@ def is_admin() -> bool:
     On Unix, checks for effective UID 0.
     """
     if is_windows():
-        try:
-            import ctypes
+        import ctypes
 
-            return bool(ctypes.windll.shell32.IsUserAnAdmin())
-        except (AttributeError, OSError):
-            return False
+        windll = getattr(ctypes, "windll", None)
+        if windll is not None:
+            return bool(windll.shell32.IsUserAnAdmin())
+        return False
     else:
         return int(os.geteuid()) == 0  # type: ignore[attr-defined]
 

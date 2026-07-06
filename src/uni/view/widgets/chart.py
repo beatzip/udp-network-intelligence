@@ -54,7 +54,7 @@ _COLOR_GRID = "#313244"
 # ---------------------------------------------------------------------------
 
 
-class BaseChart(pg.PlotWidget):  # type: ignore[misc]
+class BaseChart(pg.PlotWidget):
     """Base class for all real-time charts.
 
     Provides:
