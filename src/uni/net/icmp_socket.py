@@ -337,7 +337,7 @@ class AsyncICMPSocket:
         else:
             import os
 
-            return int(os.geteuid()) == 0  # type: ignore[attr-defined]
+            return int(getattr(os, "geteuid", lambda: 1)()) == 0
 
     async def open(self) -> None:
         """Open the ICMP socket.

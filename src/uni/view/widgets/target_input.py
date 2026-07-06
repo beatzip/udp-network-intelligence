@@ -88,4 +88,4 @@ class TargetInput(QWidget):
     @property
     def text(self) -> str:
         """Current input text."""
-        return self._input.text()
+        return str(self._input.text())

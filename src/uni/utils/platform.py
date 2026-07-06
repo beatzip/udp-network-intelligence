@@ -26,7 +26,7 @@ def is_admin() -> bool:
             return bool(windll.shell32.IsUserAnAdmin())
         return False
     else:
-        return int(os.geteuid()) == 0  # type: ignore[attr-defined]
+        return int(getattr(os, "geteuid", lambda: 1)()) == 0
 
 
 def get_executable_dir() -> Path:
