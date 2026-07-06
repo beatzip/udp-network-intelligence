@@ -67,8 +67,7 @@ def _resolve_level(level: int | str) -> int:
     level_str = level.upper().strip()
     if level_str not in _LOG_LEVELS:
         raise ValueError(
-            f"Invalid log level: {level!r}. "
-            f"Valid levels: {', '.join(_LOG_LEVELS)}"
+            f"Invalid log level: {level!r}. Valid levels: {', '.join(_LOG_LEVELS)}"
         )
     return _LOG_LEVELS[level_str]
 
@@ -76,6 +75,7 @@ def _resolve_level(level: int | str) -> int:
 # ---------------------------------------------------------------------------
 # ANSI color codes
 # ---------------------------------------------------------------------------
+
 
 class _Color(Enum):
     """ANSI escape codes for colored terminal output."""
@@ -127,6 +127,7 @@ _CATEGORY_COLORS: dict[str, _Color] = {
 # Colored formatter
 # ---------------------------------------------------------------------------
 
+
 class ColoredFormatter(logging.Formatter):
     """Log formatter with ANSI-colored level names and category highlighting.
 
@@ -164,6 +165,7 @@ class ColoredFormatter(logging.Formatter):
         if sys.platform == "win32":
             try:
                 import colorama
+
                 if not colorama.just_fix_windows_console:
                     colorama.init()
             except ImportError:
@@ -185,16 +187,12 @@ class ColoredFormatter(logging.Formatter):
         if self.use_colors and sys.stderr.isatty():
             # Color the level name
             color = _LEVEL_COLORS.get(record.levelno, _Color.WHITE)
-            record.levelname = (
-                f"{color.code}{record.levelname:<8}{_Color.RESET.code}"
-            )
+            record.levelname = f"{color.code}{record.levelname:<8}{_Color.RESET.code}"
 
             # Color the logger name by category
             cat_color = self._get_category_color(record.name)
             if cat_color:
-                record.name = (
-                    f"{cat_color.code}{record.name}{_Color.RESET.code}"
-                )
+                record.name = f"{cat_color.code}{record.name}{_Color.RESET.code}"
         else:
             record.levelname = f"{record.levelname:<8}"
 
@@ -259,6 +257,7 @@ class PlainFormatter(logging.Formatter):
 # ---------------------------------------------------------------------------
 # GUI log handler
 # ---------------------------------------------------------------------------
+
 
 class GUIHandler(logging.Handler):
     """Logging handler that captures log records for GUI display.
@@ -363,6 +362,7 @@ class GUIHandler(logging.Handler):
 # ---------------------------------------------------------------------------
 # LogManager
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class LogConfig:
@@ -674,6 +674,7 @@ class LogManager:
 # Log filter
 # ---------------------------------------------------------------------------
 
+
 class _PrefixFilter(logging.Filter):
     """Filter that allows only records whose name starts with a prefix.
 
@@ -800,6 +801,7 @@ def get_logger(name: str) -> logging.Logger:
 # Specialized loggers
 # ---------------------------------------------------------------------------
 
+
 def get_network_logger(name: str = "uni.net") -> logging.Logger:
     """Get a logger for network operations.
 
@@ -861,6 +863,7 @@ def get_probe_logger(name: str = "uni.probe") -> logging.Logger:
 # ---------------------------------------------------------------------------
 # Timestamped file handler (for daily rotation)
 # ---------------------------------------------------------------------------
+
 
 class TimedCompressHandler(logging.handlers.TimedRotatingFileHandler):
     """Timed rotating file handler that creates timestamped log files.

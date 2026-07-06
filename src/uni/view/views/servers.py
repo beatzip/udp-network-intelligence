@@ -67,9 +67,9 @@ class ServersView(QWidget):
         # Server table
         self._table = QTableWidget()
         self._table.setColumnCount(7)
-        self._table.setHorizontalHeaderLabels([
-            "Host", "Port", "Name", "Map", "Game", "Players", "Last Seen"
-        ])
+        self._table.setHorizontalHeaderLabels(
+            ["Host", "Port", "Name", "Map", "Game", "Players", "Last Seen"]
+        )
         self._table.horizontalHeader().setSectionResizeMode(
             QHeaderView.ResizeMode.Stretch
         )
@@ -106,7 +106,8 @@ class ServersView(QWidget):
         host = host_item.text()
         port = int(port_item.text())
         reply = QMessageBox.question(
-            self, "Delete Server",
+            self,
+            "Delete Server",
             f"Delete {host}:{port}?",
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
         )

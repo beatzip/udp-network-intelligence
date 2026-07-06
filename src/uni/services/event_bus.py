@@ -17,6 +17,7 @@ EventHandler = Callable[..., Coroutine[Any, Any, None]]
 @dataclass
 class _Subscription:
     """Internal subscription record."""
+
     handler: EventHandler
     priority: int = 0
     once: bool = False
@@ -54,7 +55,9 @@ class EventBus:
         self._handlers[event].sort(key=lambda s: s.priority)
         logger.debug(
             "Subscribed to '%s': %s (priority=%d)",
-            event, handler.__qualname__, priority,
+            event,
+            handler.__qualname__,
+            priority,
         )
 
     def once(
@@ -103,7 +106,8 @@ class EventBus:
             except Exception:
                 logger.exception(
                     "Handler error for event '%s': %s",
-                    event, sub.handler.__qualname__,
+                    event,
+                    sub.handler.__qualname__,
                 )
             if sub.once:
                 to_remove.append((event, sub))

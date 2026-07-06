@@ -57,8 +57,7 @@ class ExportDialog(QDialog):
         ext = ext_map.get(fmt, "txt")
 
         filepath, _ = QFileDialog.getSaveFileName(
-            self, "Export Data", f"export.{ext}",
-            f"{fmt.upper()} Files (*.{ext})"
+            self, "Export Data", f"export.{ext}", f"{fmt.upper()} Files (*.{ext})"
         )
         if filepath:
             self.export_requested.emit(fmt, filepath)

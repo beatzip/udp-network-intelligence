@@ -31,22 +31,25 @@ class DiscoveryViewModel(BaseViewModel):
             port: Server port.
         """
         from uni.protocol.source_query import SourceQuery
+
         query = SourceQuery()
         try:
             result = await query.query_info(host, port)
             if result.is_success and result.server_info:
                 info = result.server_info
-                self.query_completed.emit({
-                    "host": host,
-                    "port": port,
-                    "name": info.name,
-                    "map": info.map_name,
-                    "game": info.game,
-                    "players": info.player_count,
-                    "max_players": info.max_players,
-                    "app_id": info.app_id,
-                    "rtt_ms": result.rtt_ms,
-                })
+                self.query_completed.emit(
+                    {
+                        "host": host,
+                        "port": port,
+                        "name": info.name,
+                        "map": info.map_name,
+                        "game": info.game,
+                        "players": info.player_count,
+                        "max_players": info.max_players,
+                        "app_id": info.app_id,
+                        "rtt_ms": result.rtt_ms,
+                    }
+                )
             else:
                 self.emit_error(f"Query failed: {result.error}")
         except Exception as exc:

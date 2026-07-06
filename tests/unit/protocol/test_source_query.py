@@ -42,6 +42,7 @@ from uni.protocol.source_query import (
 # _ByteReader
 # ---------------------------------------------------------------------------
 
+
 class TestByteReader:
     """Tests for _ByteReader."""
 
@@ -104,6 +105,7 @@ class TestByteReader:
 # WireRequest
 # ---------------------------------------------------------------------------
 
+
 class TestWireRequest:
     """Tests for WireRequest."""
 
@@ -131,6 +133,7 @@ class TestWireRequest:
 # WireResponse
 # ---------------------------------------------------------------------------
 
+
 class TestWireResponse:
     """Tests for WireResponse."""
 
@@ -144,15 +147,14 @@ class TestWireResponse:
 
     def test_challenge_number(self) -> None:
         payload = struct.pack("<i", 12345)
-        wr = WireResponse(
-            header=HEADER_BYTES, type_byte=0x41, payload=payload
-        )
+        wr = WireResponse(header=HEADER_BYTES, type_byte=0x41, payload=payload)
         assert wr.challenge_number == 12345
 
 
 # ---------------------------------------------------------------------------
 # A2SInfoDecoder — Source Engine
 # ---------------------------------------------------------------------------
+
 
 class TestA2SInfoDecoderSource:
     """Tests for A2SInfoDecoder with Source Engine responses."""
@@ -271,6 +273,7 @@ class TestA2SInfoDecoderSource:
 # A2SInfoDecoder — GoldSource
 # ---------------------------------------------------------------------------
 
+
 class TestA2SInfoDecoderGoldSource:
     """Tests for A2SInfoDecoder with GoldSource responses."""
 
@@ -313,6 +316,7 @@ class TestA2SInfoDecoderGoldSource:
 # ---------------------------------------------------------------------------
 # A2SPlayerDecoder
 # ---------------------------------------------------------------------------
+
 
 class TestA2SPlayerDecoder:
     """Tests for A2SPlayerDecoder."""
@@ -359,6 +363,7 @@ class TestA2SPlayerDecoder:
 # A2SRulesDecoder
 # ---------------------------------------------------------------------------
 
+
 class TestA2SRulesDecoder:
     """Tests for A2SRulesDecoder."""
 
@@ -373,10 +378,12 @@ class TestA2SRulesDecoder:
         return b"".join(parts)
 
     def test_basic_rules(self) -> None:
-        data = self._build_rules_response({
-            "mp_friendlyfire": "1",
-            "sv_gravity": "800",
-        })
+        data = self._build_rules_response(
+            {
+                "mp_friendlyfire": "1",
+                "sv_gravity": "800",
+            }
+        )
         decoder = A2SRulesDecoder()
         rules = decoder.decode(data)
 
@@ -394,6 +401,7 @@ class TestA2SRulesDecoder:
 # ---------------------------------------------------------------------------
 # A2SQueryProtocol
 # ---------------------------------------------------------------------------
+
 
 class TestA2SQueryProtocol:
     """Tests for A2SQueryProtocol."""
@@ -539,6 +547,7 @@ class TestA2SQueryProtocol:
 # SourceQuery
 # ---------------------------------------------------------------------------
 
+
 class TestSourceQuery:
     """Tests for SourceQuery."""
 
@@ -578,6 +587,7 @@ class TestSourceQuery:
 # ---------------------------------------------------------------------------
 # Protocol constants
 # ---------------------------------------------------------------------------
+
 
 class TestProtocolConstants:
     """Tests for protocol constants."""

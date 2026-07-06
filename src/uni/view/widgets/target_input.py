@@ -28,7 +28,9 @@ class TargetInput(QWidget):
         r":(?P<port>\d{1,5})$"
     )
 
-    def __init__(self, parent: QWidget | None = None, placeholder: str = "host:port") -> None:
+    def __init__(
+        self, parent: QWidget | None = None, placeholder: str = "host:port"
+    ) -> None:
         super().__init__(parent)
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)

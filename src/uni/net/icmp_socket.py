@@ -42,6 +42,7 @@ ICMP_TIME_EXCEEDED = 11
 # ICMP message model
 # ---------------------------------------------------------------------------
 
+
 @dataclass(frozen=True, slots=True)
 class ICMPReceivedMessage:
     """Parsed ICMP message received from the network.
@@ -147,9 +148,8 @@ class ICMPReceivedMessage:
 # ICMP parser
 # ---------------------------------------------------------------------------
 
-def _parse_icmp_packet(
-    data: bytes, source_ip: str
-) -> ICMPReceivedMessage:
+
+def _parse_icmp_packet(data: bytes, source_ip: str) -> ICMPReceivedMessage:
     """Parse raw ICMP packet bytes into an ICMPReceivedMessage.
 
     Handles ICMP Time Exceeded and Destination Unreachable messages
@@ -167,7 +167,10 @@ def _parse_icmp_packet(
     # Minimum ICMP header: type(1) + code(1) + checksum(2) = 4 bytes
     if len(data) < 4:
         return ICMPReceivedMessage(
-            icmp_type=0, code=0, source_ip=source_ip, raw_data=data,
+            icmp_type=0,
+            code=0,
+            source_ip=source_ip,
+            raw_data=data,
             received_at=received_at,
         )
 
@@ -207,10 +210,10 @@ def _parse_icmp_packet(
             if protocol == 17 and len(data) >= 8 + ihl + 4:
                 udp_offset = 8 + ihl
                 original_src_port = struct.unpack(
-                    "!H", data[udp_offset:udp_offset + 2]
+                    "!H", data[udp_offset : udp_offset + 2]
                 )[0]
                 original_dest_port = struct.unpack(
-                    "!H", data[udp_offset + 2:udp_offset + 4]
+                    "!H", data[udp_offset + 2 : udp_offset + 4]
                 )[0]
 
     return ICMPReceivedMessage(
@@ -232,6 +235,7 @@ def _parse_icmp_packet(
 # ---------------------------------------------------------------------------
 # Async ICMP Protocol
 # ---------------------------------------------------------------------------
+
 
 class _ICMPProtocol(asyncio.DatagramProtocol):
     """Internal asyncio protocol for ICMP reception."""
@@ -280,6 +284,7 @@ class _ICMPProtocol(asyncio.DatagramProtocol):
 # AsyncICMPSocket
 # ---------------------------------------------------------------------------
 
+
 class AsyncICMPSocket:
     """Async ICMP socket for receiving ICMP error messages.
 
@@ -325,11 +330,13 @@ class AsyncICMPSocket:
         if platform.system() == "Windows":
             try:
                 import ctypes
+
                 return bool(ctypes.windll.shell32.IsUserAnAdmin())
             except (AttributeError, OSError):
                 return False
         else:
             import os
+
             return int(os.geteuid()) == 0  # type: ignore[attr-defined]
 
     async def open(self) -> None:
@@ -407,9 +414,7 @@ class AsyncICMPSocket:
         """Async context manager exit."""
         await self.close()
 
-    async def receive(
-        self, timeout: float = 5.0
-    ) -> ICMPReceivedMessage:
+    async def receive(self, timeout: float = 5.0) -> ICMPReceivedMessage:
         """Receive an ICMP message with timeout.
 
         Args:

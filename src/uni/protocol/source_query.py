@@ -45,6 +45,7 @@ logger = logging.getLogger(__name__)
 # Query configuration
 # ---------------------------------------------------------------------------
 
+
 @dataclass(frozen=True, slots=True)
 class QueryConfig:
     """Configuration for a Source Query exchange.
@@ -67,6 +68,7 @@ class QueryConfig:
 # ---------------------------------------------------------------------------
 # Source Query implementation
 # ---------------------------------------------------------------------------
+
 
 class SourceQuery:
     """High-level Source Query protocol interface.
@@ -115,9 +117,7 @@ class SourceQuery:
         """
         effective_timeout = timeout or self.config.timeout
         request = self.protocol.encode_info_request()
-        return await self._query(
-            host, port, request, "info", effective_timeout
-        )
+        return await self._query(host, port, request, "info", effective_timeout)
 
     async def query_players(
         self,
@@ -138,9 +138,7 @@ class SourceQuery:
         """
         effective_timeout = timeout or self.config.timeout
         request = self.protocol.encode_player_request()
-        result = await self._query(
-            host, port, request, "player", effective_timeout
-        )
+        result = await self._query(host, port, request, "player", effective_timeout)
         return result.players
 
     async def query_rules(
@@ -162,9 +160,7 @@ class SourceQuery:
         """
         effective_timeout = timeout or self.config.timeout
         request = self.protocol.encode_rules_request()
-        result = await self._query(
-            host, port, request, "rules", effective_timeout
-        )
+        result = await self._query(host, port, request, "rules", effective_timeout)
         return result.rules or ServerRules()
 
     async def query_all(
@@ -188,18 +184,12 @@ class SourceQuery:
         """
         effective_timeout = timeout or self.config.timeout
 
-        info_result = await self.query_info(
-            host, port, timeout=effective_timeout
-        )
+        info_result = await self.query_info(host, port, timeout=effective_timeout)
         if not info_result.is_success:
             return info_result
 
-        players = await self.query_players(
-            host, port, timeout=effective_timeout
-        )
-        rules = await self.query_rules(
-            host, port, timeout=effective_timeout
-        )
+        players = await self.query_players(host, port, timeout=effective_timeout)
+        rules = await self.query_rules(host, port, timeout=effective_timeout)
 
         return QueryResult(
             host=host,
@@ -242,13 +232,9 @@ class SourceQuery:
 
         for attempt in range(self.config.max_retries + 1):
             try:
-                result = await self._send_and_receive(
-                    addr, current_request, timeout
-                )
+                result = await self._send_and_receive(addr, current_request, timeout)
                 if result is not None:
-                    return self._parse_response(
-                        addr, result, query_type
-                    )
+                    return self._parse_response(addr, result, query_type)
 
                 last_error = "No response received"
 
@@ -256,21 +242,25 @@ class SourceQuery:
                 last_error = "Timeout"
                 logger.debug(
                     "%s query to %s:%d attempt %d timed out",
-                    query_type, host, port, attempt + 1,
+                    query_type,
+                    host,
+                    port,
+                    attempt + 1,
                 )
 
             except OSError as exc:
                 last_error = str(exc)
                 logger.debug(
                     "%s query to %s:%d failed: %s",
-                    query_type, host, port, exc,
+                    query_type,
+                    host,
+                    port,
+                    exc,
                 )
 
             # Exponential backoff before retry
             if attempt < self.config.max_retries:
-                delay = self.config.retry_delay * (
-                    self.config.backoff ** attempt
-                )
+                delay = self.config.retry_delay * (self.config.backoff**attempt)
                 await asyncio.sleep(delay)
 
         return QueryResult(

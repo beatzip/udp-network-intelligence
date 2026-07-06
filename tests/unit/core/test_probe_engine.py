@@ -28,6 +28,7 @@ from uni.core.probe.models import ProbeStats
 # TestMode
 # ---------------------------------------------------------------------------
 
+
 class TestTestMode:
     """Tests for TestMode enum."""
 
@@ -46,6 +47,7 @@ class TestTestMode:
 # ---------------------------------------------------------------------------
 # TestModeConfig
 # ---------------------------------------------------------------------------
+
 
 class TestTestModeConfig:
     """Tests for TestModeConfig."""
@@ -70,6 +72,7 @@ class TestTestModeConfig:
 # ProbeTarget
 # ---------------------------------------------------------------------------
 
+
 class TestProbeTarget:
     """Tests for ProbeTarget."""
 
@@ -89,6 +92,7 @@ class TestProbeTarget:
 # ---------------------------------------------------------------------------
 # RateLimiter
 # ---------------------------------------------------------------------------
+
 
 class TestRateLimiter:
     """Tests for RateLimiter."""
@@ -133,6 +137,7 @@ class TestRateLimiter:
 # RetryConfig
 # ---------------------------------------------------------------------------
 
+
 class TestRetryConfig:
     """Tests for RetryConfig."""
 
@@ -146,9 +151,7 @@ class TestRetryConfig:
         assert cfg.get_delay(5) == 1.0
 
     def test_linear_strategy(self) -> None:
-        cfg = RetryConfig(
-            strategy=RetryStrategy.LINEAR, base_delay=0.5, max_delay=3.0
-        )
+        cfg = RetryConfig(strategy=RetryStrategy.LINEAR, base_delay=0.5, max_delay=3.0)
         assert cfg.get_delay(0) == 0.5
         assert cfg.get_delay(1) == 1.0
         assert cfg.get_delay(10) == 3.0  # capped
@@ -170,6 +173,7 @@ class TestRetryConfig:
 # ---------------------------------------------------------------------------
 # CampaignResult
 # ---------------------------------------------------------------------------
+
 
 class TestCampaignResult:
     """Tests for CampaignResult."""
@@ -208,6 +212,7 @@ class TestCampaignResult:
 # ParallelTestResult
 # ---------------------------------------------------------------------------
 
+
 class TestParallelTestResult:
     """Tests for ParallelTestResult."""
 
@@ -224,6 +229,7 @@ class TestParallelTestResult:
 # ---------------------------------------------------------------------------
 # ProbeEngine — quick tests (with mock server)
 # ---------------------------------------------------------------------------
+
 
 class TestProbeEngine:
     """Tests for ProbeEngine with loopback echo server."""
@@ -256,9 +262,7 @@ class TestProbeEngine:
             ProbeTarget("192.0.2.2", 9999),
         ]
         cfg = TestModeConfig(count=2, interval=0.01, timeout=0.1)
-        result = await engine.test_parallel(
-            targets, max_concurrent=2, config=cfg
-        )
+        result = await engine.test_parallel(targets, max_concurrent=2, config=cfg)
         assert result.total_targets == 2
         assert len(result.results) == 2
 
@@ -338,9 +342,7 @@ class TestProbeEngine:
         )
         cfg = TestModeConfig(count=3, interval=0.01, timeout=0.05)
         target = ProbeTarget("192.0.2.1", 9999)
-        result = await engine.run_campaign(
-            target, config=cfg, retry=retry
-        )
+        result = await engine.run_campaign(target, config=cfg, retry=retry)
         assert len(result.results) == 3
 
     def test_compute_quality_perfect(self) -> None:
@@ -380,6 +382,7 @@ class TestProbeEngine:
 # ---------------------------------------------------------------------------
 # Helper
 # ---------------------------------------------------------------------------
+
 
 async def _echo_server(sock: __import__("socket").socket) -> None:
     """Simple UDP echo server for testing."""

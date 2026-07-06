@@ -96,6 +96,7 @@ from uni.core.analysis.statistics import (
 # Enums
 # ---------------------------------------------------------------------------
 
+
 class PredictionGrade(Enum):
     """Human-readable quality grades."""
 
@@ -138,6 +139,7 @@ class StabilityLevel(Enum):
 # Configuration
 # ---------------------------------------------------------------------------
 
+
 @dataclass(frozen=True, slots=True)
 class PredictionConfig:
     """Configuration for the prediction engine.
@@ -178,18 +180,15 @@ class PredictionConfig:
         """Validate configuration values."""
         w_sum = self.w_latency + self.w_loss + self.w_jitter
         if abs(w_sum - 1.0) > 0.01:
-            raise ValueError(
-                f"Weights must sum to 1.0, got {w_sum:.3f}"
-            )
+            raise ValueError(f"Weights must sum to 1.0, got {w_sum:.3f}")
         if self.sigmoid_k <= 0:
-            raise ValueError(
-                f"sigmoid_k must be > 0, got {self.sigmoid_k}"
-            )
+            raise ValueError(f"sigmoid_k must be > 0, got {self.sigmoid_k}")
 
 
 # ---------------------------------------------------------------------------
 # Result dataclasses
 # ---------------------------------------------------------------------------
+
 
 @dataclass(frozen=True, slots=True)
 class PredictionResult:
@@ -247,6 +246,7 @@ class PredictionResult:
 # ---------------------------------------------------------------------------
 # Mathematical functions
 # ---------------------------------------------------------------------------
+
 
 def _sigmoid(x: float, k: float = 4.0) -> float:
     """Sigmoid function: 1 / (1 + exp(-k * x)).
@@ -333,9 +333,7 @@ def compute_connection_probability(
     if sent <= 0:
         return 0.0
     base_rate = received / sent
-    anomaly_factor = min(
-        1.0, consecutive_failures / max(1, failure_window)
-    )
+    anomaly_factor = min(1.0, consecutive_failures / max(1, failure_window))
     return max(0.0, min(1.0, base_rate * (1.0 - anomaly_factor)))
 
 
@@ -415,9 +413,7 @@ def compute_quality_score(
     )
 
     quality = (
-        cfg.w_latency * lat_score
-        + cfg.w_loss * loss_score
-        + cfg.w_jitter * jit_score
+        cfg.w_latency * lat_score + cfg.w_loss * loss_score + cfg.w_jitter * jit_score
     )
     quality = max(0.0, min(1.0, quality))
 
@@ -587,6 +583,7 @@ def estimate_next_rtt(
 # ---------------------------------------------------------------------------
 # Prediction Engine
 # ---------------------------------------------------------------------------
+
 
 class PredictionEngine:
     """Mathematical prediction engine for network quality forecasting.

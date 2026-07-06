@@ -26,6 +26,7 @@ from uni.core.analysis.prediction import (
 # _sigmoid
 # ---------------------------------------------------------------------------
 
+
 class TestSigmoid:
     def test_zero(self) -> None:
         assert _sigmoid(0.0) == pytest.approx(0.5)
@@ -49,6 +50,7 @@ class TestSigmoid:
 # _inverse_sigmoid_mapped
 # ---------------------------------------------------------------------------
 
+
 class TestInverseSigmoidMapped:
     def test_at_midpoint(self) -> None:
         result = _inverse_sigmoid_mapped(80.0, 80.0, 60.0)
@@ -70,6 +72,7 @@ class TestInverseSigmoidMapped:
 # ---------------------------------------------------------------------------
 # compute_connection_probability
 # ---------------------------------------------------------------------------
+
 
 class TestConnectionProbability:
     def test_perfect(self) -> None:
@@ -106,6 +109,7 @@ class TestConnectionProbability:
 # compute_stability
 # ---------------------------------------------------------------------------
 
+
 class TestStability:
     def test_perfect_stability(self) -> None:
         assert compute_stability([10.0, 10.0, 10.0, 10.0]) == 1.0
@@ -137,23 +141,18 @@ class TestStability:
 # compute_quality_score
 # ---------------------------------------------------------------------------
 
+
 class TestQualityScore:
     def test_perfect(self) -> None:
-        q, lat, loss, jit = compute_quality_score(
-            [10.0, 10.0, 10.0], 0.0, 0.0
-        )
+        q, lat, loss, jit = compute_quality_score([10.0, 10.0, 10.0], 0.0, 0.0)
         assert q > 0.9
 
     def test_poor(self) -> None:
-        q, lat, loss, jit = compute_quality_score(
-            [500.0, 500.0, 500.0], 0.5, 100.0
-        )
+        q, lat, loss, jit = compute_quality_score([500.0, 500.0, 500.0], 0.5, 100.0)
         assert q < 0.3
 
     def test_weights_sum_to_one(self) -> None:
-        q, lat, loss, jit = compute_quality_score(
-            [20.0, 20.0], 0.0, 0.0
-        )
+        q, lat, loss, jit = compute_quality_score([20.0, 20.0], 0.0, 0.0)
         assert lat + loss + jit > 0
 
     def test_empty_samples(self) -> None:
@@ -162,15 +161,14 @@ class TestQualityScore:
 
     def test_custom_config(self) -> None:
         cfg = PredictionConfig(w_latency=1.0, w_loss=0.0, w_jitter=0.0)
-        q, lat, loss, jit = compute_quality_score(
-            [10.0, 10.0], 0.0, 0.0, cfg
-        )
+        q, lat, loss, jit = compute_quality_score([10.0, 10.0], 0.0, 0.0, cfg)
         assert q == pytest.approx(lat, abs=0.01)
 
 
 # ---------------------------------------------------------------------------
 # compute_rating
 # ---------------------------------------------------------------------------
+
 
 class TestRating:
     def test_five_stars(self) -> None:
@@ -196,6 +194,7 @@ class TestRating:
 # ---------------------------------------------------------------------------
 # compute_confidence
 # ---------------------------------------------------------------------------
+
 
 class TestConfidence:
     def test_many_samples(self) -> None:
@@ -231,6 +230,7 @@ class TestConfidence:
 # compute_quality_grade
 # ---------------------------------------------------------------------------
 
+
 class TestQualityGrade:
     def test_excellent(self) -> None:
         assert compute_quality_grade(0.9) == PredictionGrade.EXCELLENT
@@ -256,6 +256,7 @@ class TestQualityGrade:
 # compute_stability_level
 # ---------------------------------------------------------------------------
 
+
 class TestStabilityLevel:
     def test_rock_solid(self) -> None:
         assert compute_stability_level(0.95) == StabilityLevel.ROCK_SOLID
@@ -276,6 +277,7 @@ class TestStabilityLevel:
 # ---------------------------------------------------------------------------
 # estimate_next_rtt
 # ---------------------------------------------------------------------------
+
 
 class TestEstimateNextRtt:
     def test_basic(self) -> None:
@@ -306,6 +308,7 @@ class TestEstimateNextRtt:
 # PredictionConfig
 # ---------------------------------------------------------------------------
 
+
 class TestPredictionConfig:
     def test_defaults(self) -> None:
         cfg = PredictionConfig()
@@ -326,6 +329,7 @@ class TestPredictionConfig:
 # ---------------------------------------------------------------------------
 # PredictionResult
 # ---------------------------------------------------------------------------
+
 
 class TestPredictionResult:
     def test_to_dict(self) -> None:
@@ -355,6 +359,7 @@ class TestPredictionResult:
 # PredictionEngine
 # ---------------------------------------------------------------------------
 
+
 class TestPredictionEngine:
     @pytest.fixture
     def engine(self) -> PredictionEngine:
@@ -362,9 +367,7 @@ class TestPredictionEngine:
 
     def test_perfect_connection(self, engine: PredictionEngine) -> None:
         samples = [10.0] * 100
-        result = engine.predict(
-            samples=samples, sent=100, received=100, jitter=0.0
-        )
+        result = engine.predict(samples=samples, sent=100, received=100, jitter=0.0)
         assert result.probability == 1.0
         assert result.stability == 1.0
         assert result.quality > 0.9
@@ -374,9 +377,7 @@ class TestPredictionEngine:
 
     def test_poor_connection(self, engine: PredictionEngine) -> None:
         samples = [500.0, 100.0, 800.0, 50.0, 600.0]
-        result = engine.predict(
-            samples=samples, sent=100, received=50, jitter=200.0
-        )
+        result = engine.predict(samples=samples, sent=100, received=50, jitter=200.0)
         assert result.probability < 0.6
         assert result.quality < 0.4
         assert result.rating <= 2
@@ -385,64 +386,47 @@ class TestPredictionEngine:
     def test_with_consecutive_failures(self, engine: PredictionEngine) -> None:
         result = engine.predict(
             samples=[10.0, 10.0, 10.0],
-            sent=100, received=100,
+            sent=100,
+            received=100,
             consecutive_failures=5,
         )
         assert result.probability < 1.0
 
     def test_empty_samples(self, engine: PredictionEngine) -> None:
-        result = engine.predict(
-            samples=[], sent=0, received=0
-        )
+        result = engine.predict(samples=[], sent=0, received=0)
         assert result.probability == 0.0
         assert result.sample_count == 0
 
     def test_predict_simple(self, engine: PredictionEngine) -> None:
-        result = engine.predict_simple(
-            avg_rtt=15.0, loss_percent=2.0, jitter=3.0
-        )
+        result = engine.predict_simple(avg_rtt=15.0, loss_percent=2.0, jitter=3.0)
         assert 0.0 <= result.quality <= 1.0
         assert 1 <= result.rating <= 5
 
     def test_expected_rtt(self, engine: PredictionEngine) -> None:
         samples = [10.0, 20.0, 30.0, 40.0]
-        result = engine.predict(
-            samples=samples, sent=4, received=4
-        )
+        result = engine.predict(samples=samples, sent=4, received=4)
         assert result.expected_rtt > 10.0
 
     def test_rtt_range(self, engine: PredictionEngine) -> None:
         samples = [10.0, 50.0, 20.0]
-        result = engine.predict(
-            samples=samples, sent=3, received=3
-        )
+        result = engine.predict(samples=samples, sent=3, received=3)
         assert result.rtt_range == (10.0, 50.0)
 
     def test_confidence_increases_with_samples(self, engine: PredictionEngine) -> None:
-        r1 = engine.predict(
-            samples=[10.0] * 5, sent=5, received=5
-        )
-        r2 = engine.predict(
-            samples=[10.0] * 100, sent=100, received=100
-        )
+        r1 = engine.predict(samples=[10.0] * 5, sent=5, received=5)
+        r2 = engine.predict(samples=[10.0] * 100, sent=100, received=100)
         # With zero variance, confidence is 1.0 for both — just check range
         assert 0.0 <= r1.confidence <= 1.0
         assert 0.0 <= r2.confidence <= 1.0
 
     def test_stability_decreases_with_variance(self, engine: PredictionEngine) -> None:
-        r1 = engine.predict(
-            samples=[10.0, 10.0, 10.0, 10.0], sent=4, received=4
-        )
-        r2 = engine.predict(
-            samples=[10.0, 100.0, 10.0, 100.0], sent=4, received=4
-        )
+        r1 = engine.predict(samples=[10.0, 10.0, 10.0, 10.0], sent=4, received=4)
+        r2 = engine.predict(samples=[10.0, 100.0, 10.0, 100.0], sent=4, received=4)
         assert r1.stability > r2.stability
 
     def test_all_metrics_in_range(self, engine: PredictionEngine) -> None:
         samples = [15.0, 20.0, 18.0, 22.0, 16.0, 19.0, 21.0]
-        result = engine.predict(
-            samples=samples, sent=50, received=48, jitter=5.0
-        )
+        result = engine.predict(samples=samples, sent=50, received=48, jitter=5.0)
         assert 0.0 <= result.probability <= 1.0
         assert 0.0 <= result.stability <= 1.0
         assert 0.0 <= result.quality <= 1.0
@@ -454,9 +438,7 @@ class TestPredictionEngine:
 
     def test_grade_rating_consistency(self, engine: PredictionEngine) -> None:
         """Grade and rating should generally agree."""
-        result = engine.predict(
-            samples=[10.0] * 50, sent=50, received=50, jitter=1.0
-        )
+        result = engine.predict(samples=[10.0] * 50, sent=50, received=50, jitter=1.0)
         if result.rating >= 4:
             assert result.grade in (PredictionGrade.EXCELLENT, PredictionGrade.GOOD)
         if result.rating <= 2:
@@ -465,21 +447,23 @@ class TestPredictionEngine:
     def test_custom_config(self) -> None:
         cfg = PredictionConfig(w_latency=0.7, w_loss=0.2, w_jitter=0.1)
         engine = PredictionEngine(config=cfg)
-        result = engine.predict(
-            samples=[10.0, 12.0, 11.0], sent=3, received=3
-        )
+        result = engine.predict(samples=[10.0, 12.0, 11.0], sent=3, received=3)
         assert 0.0 <= result.quality <= 1.0
 
-    def test_probability_penalizes_bursty_failures(self, engine: PredictionEngine) -> None:
+    def test_probability_penalizes_bursty_failures(
+        self, engine: PredictionEngine
+    ) -> None:
         """Same loss rate but bursty failures should have lower probability."""
         r1 = engine.predict(
             samples=[10.0] * 100,
-            sent=100, received=95,
+            sent=100,
+            received=95,
             consecutive_failures=0,
         )
         r2 = engine.predict(
             samples=[10.0] * 95,
-            sent=100, received=95,
+            sent=100,
+            received=95,
             consecutive_failures=5,
         )
         assert r1.probability > r2.probability

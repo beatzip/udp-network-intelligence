@@ -29,10 +29,10 @@ class ProbeViewModel(BaseViewModel):
         probe_error: Emitted with error message.
     """
 
-    probe_started = Signal(str, int)          # target, total_probes
+    probe_started = Signal(str, int)  # target, total_probes
     probe_progress = Signal(int, int, float)  # current, total, last_rtt
-    probe_completed = Signal(dict)            # campaign result dict
-    probe_error = Signal(str)                 # error message
+    probe_completed = Signal(dict)  # campaign result dict
+    probe_error = Signal(str)  # error message
 
     def __init__(self) -> None:
         super().__init__()
@@ -79,12 +79,8 @@ class ProbeViewModel(BaseViewModel):
         cfg: TestModeConfig | None = None
         if interval is not None or count is not None:
             base = {
-                TestMode.NORMAL: TestModeConfig(
-                    count=20, interval=1.0, timeout=3.0
-                ),
-                TestMode.DEEP: TestModeConfig(
-                    count=100, interval=0.5, timeout=3.0
-                ),
+                TestMode.NORMAL: TestModeConfig(count=20, interval=1.0, timeout=3.0),
+                TestMode.DEEP: TestModeConfig(count=100, interval=0.5, timeout=3.0),
                 TestMode.AGGRESSIVE: TestModeConfig(
                     count=200, interval=0.2, timeout=5.0
                 ),
@@ -132,9 +128,7 @@ class ProbeViewModel(BaseViewModel):
             "normal": TestModeConfig(
                 count=20, interval=1.0, timeout=3.0, label="Normal"
             ),
-            "deep": TestModeConfig(
-                count=100, interval=0.5, timeout=3.0, label="Deep"
-            ),
+            "deep": TestModeConfig(count=100, interval=0.5, timeout=3.0, label="Deep"),
             "aggressive": TestModeConfig(
                 count=200, interval=0.2, timeout=5.0, label="Aggressive"
             ),

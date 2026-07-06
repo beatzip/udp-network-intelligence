@@ -20,7 +20,7 @@ class DashboardViewModel(BaseViewModel):
         chart_data_updated: Emitted when chart data is ready.
     """
 
-    stats_updated = Signal(dict)   # {servers, measurements, errors, avg_rtt, ...}
+    stats_updated = Signal(dict)  # {servers, measurements, errors, avg_rtt, ...}
     chart_data_updated = Signal(list, list)  # (labels, values)
 
     def __init__(self) -> None:

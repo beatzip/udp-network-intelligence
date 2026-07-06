@@ -45,6 +45,7 @@ logger = logging.getLogger(__name__)
 # Test modes
 # ---------------------------------------------------------------------------
 
+
 class TestMode(Enum):
     """Server testing intensity modes."""
 
@@ -86,12 +87,8 @@ class TestModeConfig:
 
 
 # Predefined mode configurations
-MODE_NORMAL = TestModeConfig(
-    count=20, interval=1.0, timeout=3.0, label="Normal"
-)
-MODE_DEEP = TestModeConfig(
-    count=100, interval=0.5, timeout=3.0, label="Deep"
-)
+MODE_NORMAL = TestModeConfig(count=20, interval=1.0, timeout=3.0, label="Normal")
+MODE_DEEP = TestModeConfig(count=100, interval=0.5, timeout=3.0, label="Deep")
 MODE_AGGRESSIVE = TestModeConfig(
     count=200, interval=0.2, timeout=5.0, max_retries=1, label="Aggressive"
 )
@@ -106,6 +103,7 @@ _MODE_MAP: dict[TestMode, TestModeConfig] = {
 # ---------------------------------------------------------------------------
 # Rate limiter
 # ---------------------------------------------------------------------------
+
 
 class RateLimiter:
     """Token-bucket rate limiter for controlling probe send rate.
@@ -177,6 +175,7 @@ class RateLimiter:
 # Retry strategy
 # ---------------------------------------------------------------------------
 
+
 class RetryStrategy(Enum):
     """Retry behavior on probe failure."""
 
@@ -229,15 +228,14 @@ class RetryConfig:
         if self.strategy == RetryStrategy.LINEAR:
             return min(self.base_delay * (attempt + 1), self.max_delay)
         if self.strategy == RetryStrategy.EXPONENTIAL:
-            return min(
-                self.base_delay * (self.backoff ** attempt), self.max_delay
-            )
+            return min(self.base_delay * (self.backoff**attempt), self.max_delay)
         return 0.0
 
 
 # ---------------------------------------------------------------------------
 # Probe target
 # ---------------------------------------------------------------------------
+
 
 @dataclass(frozen=True, slots=True)
 class ProbeTarget:
@@ -266,6 +264,7 @@ class ProbeTarget:
 # ---------------------------------------------------------------------------
 # Probe campaign result
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class CampaignResult:
@@ -362,6 +361,7 @@ class CampaignResult:
 # ---------------------------------------------------------------------------
 # Parallel test result
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class ParallelTestResult:
@@ -474,9 +474,7 @@ class ProbeEngine:
             CampaignResult with statistics and quality.
         """
         target = ProbeTarget(host=host, port=port)
-        return await self.run_campaign(
-            target, TestMode.NORMAL, on_progress=on_progress
-        )
+        return await self.run_campaign(target, TestMode.NORMAL, on_progress=on_progress)
 
     async def test_deep(
         self,
@@ -498,9 +496,7 @@ class ProbeEngine:
             CampaignResult with statistics and quality.
         """
         target = ProbeTarget(host=host, port=port)
-        return await self.run_campaign(
-            target, TestMode.DEEP, on_progress=on_progress
-        )
+        return await self.run_campaign(target, TestMode.DEEP, on_progress=on_progress)
 
     async def test_aggressive(
         self,
@@ -569,7 +565,9 @@ class ProbeEngine:
 
         logger.info(
             "Campaign started: %s mode=%s count=%d",
-            target, cfg.label, cfg.count,
+            target,
+            cfg.label,
+            cfg.count,
         )
 
         socket_config = SocketConfig(
@@ -705,8 +703,7 @@ class ProbeEngine:
         retry: RetryConfig | None = None,
         rate_limit: float = 0,
         on_progress: (
-            Callable[[str, int, int, ProbeResult], Coroutine[Any, Any, None]]
-            | None
+            Callable[[str, int, int, ProbeResult], Coroutine[Any, Any, None]] | None
         ) = None,
     ) -> ParallelTestResult:
         """Test multiple targets in parallel.
@@ -733,7 +730,10 @@ class ProbeEngine:
         async def _run_one(target: ProbeTarget) -> CampaignResult:
             async with semaphore:
                 return await self.run_campaign(
-                    target, mode, config=config, retry=retry,
+                    target,
+                    mode,
+                    config=config,
+                    retry=retry,
                     rate_limit=rate_limit,
                 )
 
@@ -858,27 +858,35 @@ class ProbeEngine:
         # Map to grade
         if overall >= 92:
             from uni.app.constants import QualityGrade
+
             grade = QualityGrade.A_PLUS
         elif overall >= 82:
             from uni.app.constants import QualityGrade
+
             grade = QualityGrade.A
         elif overall >= 72:
             from uni.app.constants import QualityGrade
+
             grade = QualityGrade.B_PLUS
         elif overall >= 62:
             from uni.app.constants import QualityGrade
+
             grade = QualityGrade.B
         elif overall >= 52:
             from uni.app.constants import QualityGrade
+
             grade = QualityGrade.C_PLUS
         elif overall >= 40:
             from uni.app.constants import QualityGrade
+
             grade = QualityGrade.C
         elif overall >= 25:
             from uni.app.constants import QualityGrade
+
             grade = QualityGrade.D
         else:
             from uni.app.constants import QualityGrade
+
             grade = QualityGrade.F
 
         return QualityReport(

@@ -31,6 +31,7 @@ from uni.core.analysis.statistics import (
 # compute_mean
 # ---------------------------------------------------------------------------
 
+
 class TestMean:
     def test_basic(self) -> None:
         assert compute_mean([10.0, 20.0, 30.0]) == 20.0
@@ -51,6 +52,7 @@ class TestMean:
 # ---------------------------------------------------------------------------
 # compute_median
 # ---------------------------------------------------------------------------
+
 
 class TestMedian:
     def test_odd_count(self) -> None:
@@ -76,6 +78,7 @@ class TestMedian:
 # compute_variance
 # ---------------------------------------------------------------------------
 
+
 class TestVariance:
     def test_population(self) -> None:
         assert compute_variance([2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0]) == 4.0
@@ -99,6 +102,7 @@ class TestVariance:
 # compute_stddev
 # ---------------------------------------------------------------------------
 
+
 class TestStddev:
     def test_basic(self) -> None:
         assert compute_stddev([2.0, 4.0, 4.0, 4.0, 5.0, 5.0, 7.0, 9.0]) == 2.0
@@ -117,6 +121,7 @@ class TestStddev:
 # ---------------------------------------------------------------------------
 # compute_percentile
 # ---------------------------------------------------------------------------
+
 
 class TestPercentile:
     def test_p50(self) -> None:
@@ -180,6 +185,7 @@ class TestPercentileRank:
 # compute_packet_loss / compute_loss_percent
 # ---------------------------------------------------------------------------
 
+
 class TestPacketLoss:
     def test_no_loss(self) -> None:
         assert compute_packet_loss(100, 100) == 0.0
@@ -203,6 +209,7 @@ class TestPacketLoss:
 # ---------------------------------------------------------------------------
 # compute_jitter_rfc3550
 # ---------------------------------------------------------------------------
+
 
 class TestJitterRFC3550:
     def test_constant_rtt(self) -> None:
@@ -240,6 +247,7 @@ class TestJitterRFC3550:
 # compute_moving_average
 # ---------------------------------------------------------------------------
 
+
 class TestMovingAverage:
     def test_basic(self) -> None:
         result = compute_moving_average([1.0, 2.0, 3.0, 4.0, 5.0], 3)
@@ -267,6 +275,7 @@ class TestMovingAverage:
 # ---------------------------------------------------------------------------
 # compute_ema
 # ---------------------------------------------------------------------------
+
 
 class TestEMA:
     def test_basic(self) -> None:
@@ -300,6 +309,7 @@ class TestEMA:
 # compute_weighted_average
 # ---------------------------------------------------------------------------
 
+
 class TestWeightedAverage:
     def test_basic(self) -> None:
         result = compute_weighted_average([10.0, 20.0, 30.0], [1.0, 2.0, 1.0])
@@ -322,6 +332,7 @@ class TestWeightedAverage:
 # compute_harmonic_mean
 # ---------------------------------------------------------------------------
 
+
 class TestHarmonicMean:
     def test_basic(self) -> None:
         # 3 / (1/10 + 1/20 + 1/40) = 3 / (7/40) = 120/7 = 17.142857...
@@ -342,6 +353,7 @@ class TestHarmonicMean:
 # compute_geometric_mean
 # ---------------------------------------------------------------------------
 
+
 class TestGeometricMean:
     def test_basic(self) -> None:
         assert compute_geometric_mean([2.0, 8.0]) == 4.0
@@ -360,6 +372,7 @@ class TestGeometricMean:
 # compute_cv
 # ---------------------------------------------------------------------------
 
+
 class TestCV:
     def test_constant(self) -> None:
         assert compute_cv([5.0, 5.0, 5.0]) == 0.0
@@ -375,6 +388,7 @@ class TestCV:
 # ---------------------------------------------------------------------------
 # StatsEngine
 # ---------------------------------------------------------------------------
+
 
 class TestStatsEngine:
     def test_empty(self) -> None:
@@ -500,6 +514,4 @@ class TestStatsEngine:
         # Batch
         assert inc_report.mean == pytest.approx(compute_mean(samples))
         assert inc_report.median == pytest.approx(compute_median(samples))
-        assert inc_report.p95 == pytest.approx(
-            compute_percentile(samples, 95), abs=0.1
-        )
+        assert inc_report.p95 == pytest.approx(compute_percentile(samples, 95), abs=0.1)

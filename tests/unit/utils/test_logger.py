@@ -27,6 +27,7 @@ from uni.services.logger import (
 # _resolve_level
 # ---------------------------------------------------------------------------
 
+
 class TestResolveLevel:
     """Tests for _resolve_level()."""
 
@@ -59,6 +60,7 @@ class TestResolveLevel:
 # ---------------------------------------------------------------------------
 # LogConfig
 # ---------------------------------------------------------------------------
+
 
 class TestLogConfig:
     """Tests for LogConfig dataclass."""
@@ -98,6 +100,7 @@ class TestLogConfig:
 # PlainFormatter
 # ---------------------------------------------------------------------------
 
+
 class TestPlainFormatter:
     """Tests for PlainFormatter."""
 
@@ -135,6 +138,7 @@ class TestPlainFormatter:
 # ---------------------------------------------------------------------------
 # GUIHandler
 # ---------------------------------------------------------------------------
+
 
 class TestGUIHandler:
     """Tests for GUIHandler."""
@@ -291,6 +295,7 @@ class TestGUIHandler:
 # _PrefixFilter
 # ---------------------------------------------------------------------------
 
+
 class TestPrefixFilter:
     """Tests for _PrefixFilter."""
 
@@ -350,6 +355,7 @@ class TestPrefixFilter:
 # ---------------------------------------------------------------------------
 # LogManager
 # ---------------------------------------------------------------------------
+
 
 class TestLogManager:
     """Tests for LogManager."""
@@ -428,6 +434,7 @@ class TestLogManager:
 # setup_logging
 # ---------------------------------------------------------------------------
 
+
 class TestSetupLogging:
     """Tests for setup_logging() convenience function."""
 
@@ -468,6 +475,7 @@ class TestSetupLogging:
 # get_logger helpers
 # ---------------------------------------------------------------------------
 
+
 class TestGetLoggers:
     """Tests for specialized logger getters."""
 
@@ -496,6 +504,7 @@ class TestGetLoggers:
 # ---------------------------------------------------------------------------
 # Integration: logging works end-to-end
 # ---------------------------------------------------------------------------
+
 
 class TestLoggingIntegration:
     """Integration tests for the logging system."""

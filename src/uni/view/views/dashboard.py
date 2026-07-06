@@ -75,7 +75,9 @@ class DashboardView(QWidget):
         scroll.setWidget(content)
         main_layout.addWidget(scroll)
 
-    def _create_stat_card(self, title: str, default: str) -> tuple[QFrame, QLabel, QLabel]:
+    def _create_stat_card(
+        self, title: str, default: str
+    ) -> tuple[QFrame, QLabel, QLabel]:
         """Create a stat card with title and value labels.
 
         Returns:

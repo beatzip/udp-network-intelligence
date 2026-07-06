@@ -38,6 +38,7 @@ logger = logging.getLogger(__name__)
 # Socket options
 # ---------------------------------------------------------------------------
 
+
 @dataclass(frozen=True, slots=True)
 class SocketOptions:
     """Extended socket options beyond the basic SocketConfig.
@@ -64,6 +65,7 @@ class SocketOptions:
 # ---------------------------------------------------------------------------
 # Protocol result types
 # ---------------------------------------------------------------------------
+
 
 class SendResult(Enum):
     """Result of a send operation."""
@@ -124,6 +126,7 @@ class PacketInfo:
 # Protocol class
 # ---------------------------------------------------------------------------
 
+
 class _UDPProtocol(asyncio.DatagramProtocol):
     """Internal asyncio DatagramProtocol implementation.
 
@@ -134,9 +137,7 @@ class _UDPProtocol(asyncio.DatagramProtocol):
     def __init__(self) -> None:
         """Initialize the protocol."""
         self._transport: asyncio.DatagramTransport | None = None
-        self._recv_queue: asyncio.Queue[
-            tuple[bytes, tuple[str, int]]
-        ] = asyncio.Queue()
+        self._recv_queue: asyncio.Queue[tuple[bytes, tuple[str, int]]] = asyncio.Queue()
         self._error_queue: asyncio.Queue[Exception] = asyncio.Queue()
         self._closed = asyncio.Event()
 
@@ -177,9 +178,7 @@ class _UDPProtocol(asyncio.DatagramProtocol):
         """
         self._error_queue.put_nowait(exc)
 
-    async def receive(
-        self, timeout: float
-    ) -> tuple[bytes, tuple[str, int]]:
+    async def receive(self, timeout: float) -> tuple[bytes, tuple[str, int]]:
         """Wait for a received datagram with timeout.
 
         Args:
@@ -193,9 +192,7 @@ class _UDPProtocol(asyncio.DatagramProtocol):
             ConnectionError: If the socket is closed.
         """
         try:
-            return await asyncio.wait_for(
-                self._recv_queue.get(), timeout=timeout
-            )
+            return await asyncio.wait_for(self._recv_queue.get(), timeout=timeout)
         except TimeoutError:
             raise
         except asyncio.CancelledError:
@@ -205,6 +202,7 @@ class _UDPProtocol(asyncio.DatagramProtocol):
 # ---------------------------------------------------------------------------
 # AsyncUDPSocket
 # ---------------------------------------------------------------------------
+
 
 class AsyncUDPSocket:
     """High-performance async UDP socket with full telemetry.
@@ -401,9 +399,7 @@ class AsyncUDPSocket:
 
         # TTL (IPv4 only)
         if self.config.ttl > 0 and self.af == socket.AF_INET:
-            sock.setsockopt(
-                socket.IPPROTO_IP, socket.IP_TTL, self.config.ttl
-            )
+            sock.setsockopt(socket.IPPROTO_IP, socket.IP_TTL, self.config.ttl)
 
         # TTL (IPv6)
         if self.config.ttl > 0 and self.af == socket.AF_INET6:
@@ -432,14 +428,10 @@ class AsyncUDPSocket:
             if self.af == socket.AF_INET:
                 sock.setsockopt(socket.IPPROTO_IP, socket.IP_TTL, ttl)
             elif self.af == socket.AF_INET6:
-                sock.setsockopt(
-                    socket.IPPROTO_IPV6, socket.IPV6_UNICAST_HOPS, ttl
-                )
+                sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_UNICAST_HOPS, ttl)
             logger.debug("TTL set to %d", ttl)
 
-    def set_socket_option(
-        self, level: int, option: int, value: int
-    ) -> None:
+    def set_socket_option(self, level: int, option: int, value: int) -> None:
         """Set an arbitrary socket option on the underlying socket.
 
         Args:
@@ -458,7 +450,9 @@ class AsyncUDPSocket:
             sock.setsockopt(level, option, value)
             logger.debug(
                 "Socket option set: level=%d, option=%d, value=%d",
-                level, option, value,
+                level,
+                option,
+                value,
             )
 
     async def send(self, data: bytes, addr: tuple[str, int]) -> PacketInfo:
@@ -581,9 +575,7 @@ class AsyncUDPSocket:
 
             # Wait for response
             try:
-                recv_data, recv_addr = await self._protocol.receive(
-                    effective_timeout
-                )
+                recv_data, recv_addr = await self._protocol.receive(effective_timeout)
                 recv_time = time.monotonic()
                 self.stats.record_receive(len(recv_data))
                 rtt_ms = (recv_time - sent_time) * 1000.0
@@ -666,9 +658,7 @@ class AsyncUDPSocket:
         current_delay = retry_delay
 
         for attempt in range(max_retries + 1):
-            result = await self.send_receive(
-                data, addr, timeout=timeout, ttl=ttl
-            )
+            result = await self.send_receive(data, addr, timeout=timeout, ttl=ttl)
 
             if result.is_success:
                 return result
@@ -703,9 +693,7 @@ class AsyncUDPSocket:
             "packets_received": self.stats.packets_received,
             "errors": self.stats.errors,
             "loss_rate": round(
-                (
-                    self.stats.packets_sent - self.stats.packets_received
-                )
+                (self.stats.packets_sent - self.stats.packets_received)
                 / max(1, self.stats.packets_sent),
                 4,
             ),
@@ -723,6 +711,7 @@ class AsyncUDPSocket:
 # ---------------------------------------------------------------------------
 # Convenience: send one packet
 # ---------------------------------------------------------------------------
+
 
 async def udp_send_receive(
     data: bytes,
@@ -763,7 +752,10 @@ async def udp_send_receive(
     async with AsyncUDPSocket(config) as sock:
         if max_retries > 0:
             return await sock.send_receive_with_retry(
-                data, addr, timeout=timeout, max_retries=max_retries,
+                data,
+                addr,
+                timeout=timeout,
+                max_retries=max_retries,
                 retry_delay=retry_delay,
             )
         return await sock.send_receive(data, addr, timeout=timeout)

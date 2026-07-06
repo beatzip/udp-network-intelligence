@@ -10,6 +10,7 @@ from dataclasses import dataclass
 @dataclass(frozen=True, slots=True)
 class NetworkInterface:
     """Represents a local network interface."""
+
     name: str
     address: str
     netmask: str = ""

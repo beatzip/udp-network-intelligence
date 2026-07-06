@@ -36,10 +36,14 @@ class TracerouteView(QWidget):
         layout = QVBoxLayout(self)
 
         # Target input
-        self._target_input = TargetInput(placeholder="Target for traceroute (host:port)")
+        self._target_input = TargetInput(
+            placeholder="Target for traceroute (host:port)"
+        )
 
         # Buttons
-        btn_layout = __import__("PySide6.QtWidgets", fromlist=["QHBoxLayout"]).QHBoxLayout()
+        btn_layout = __import__(
+            "PySide6.QtWidgets", fromlist=["QHBoxLayout"]
+        ).QHBoxLayout()
         self._trace_btn = QPushButton("Trace")
         self._trace_btn.clicked.connect(self._on_trace)
         self._stop_btn = QPushButton("Stop")

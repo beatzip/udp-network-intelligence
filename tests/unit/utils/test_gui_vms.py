@@ -23,6 +23,7 @@ from uni.viewmodel.servers_vm import ServersViewModel
 # BaseViewModel
 # ---------------------------------------------------------------------------
 
+
 class TestBaseViewModel:
     def test_initial_state(self) -> None:
         vm = BaseViewModel()
@@ -47,6 +48,7 @@ class TestBaseViewModel:
 # DashboardViewModel
 # ---------------------------------------------------------------------------
 
+
 class TestDashboardViewModel:
     def test_update_stats(self) -> None:
         vm = DashboardViewModel()
@@ -59,7 +61,9 @@ class TestDashboardViewModel:
     def test_add_chart_point(self) -> None:
         vm = DashboardViewModel()
         received: list = []
-        vm.chart_data_updated.connect(lambda labels, vals: received.append((labels, vals)))
+        vm.chart_data_updated.connect(
+            lambda labels, vals: received.append((labels, vals))
+        )
         vm.add_chart_point("t1", 10.0)
         assert len(received) == 1
         assert received[0] == (["t1"], [10.0])
@@ -75,6 +79,7 @@ class TestDashboardViewModel:
 # ---------------------------------------------------------------------------
 # ServersViewModel
 # ---------------------------------------------------------------------------
+
 
 class TestServersViewModel:
     @pytest.mark.asyncio
@@ -127,14 +132,18 @@ class TestServersViewModel:
 # HistoryViewModel
 # ---------------------------------------------------------------------------
 
+
 class TestHistoryViewModel:
     @pytest.mark.asyncio
     async def test_load_measurements(self, tmp_path: Path) -> None:
         repo = HistoryRepository(str(tmp_path / "test.db"))
         await repo.initialize()
-        await repo.save_measurement(MeasurementRecord(
-            target_host="1.2.3.4", avg_rtt=15.0,
-        ))
+        await repo.save_measurement(
+            MeasurementRecord(
+                target_host="1.2.3.4",
+                avg_rtt=15.0,
+            )
+        )
 
         vm = HistoryViewModel(repo)
         received: list[list] = []

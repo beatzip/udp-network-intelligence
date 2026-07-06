@@ -50,13 +50,9 @@ class TracerouteHop:
     def __post_init__(self) -> None:
         """Validate hop fields."""
         if not (1 <= self.ttl <= 255):
-            raise ValueError(
-                f"TracerouteHop.ttl must be 1-255, got {self.ttl}"
-            )
+            raise ValueError(f"TracerouteHop.ttl must be 1-255, got {self.ttl}")
         if self.rtt_ms is not None and self.rtt_ms < 0:
-            raise ValueError(
-                f"TracerouteHop.rtt_ms must be >= 0, got {self.rtt_ms}"
-            )
+            raise ValueError(f"TracerouteHop.rtt_ms must be >= 0, got {self.rtt_ms}")
         if not self.is_timeout and self.ip is None:
             raise ValueError(
                 "TracerouteHop.ip must not be None when is_timeout is False"

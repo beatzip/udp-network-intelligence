@@ -70,6 +70,7 @@ from typing import Any
 # Configuration
 # ---------------------------------------------------------------------------
 
+
 @dataclass(frozen=True, slots=True)
 class RankingConfig:
     """Configuration for the ranking engine.
@@ -107,8 +108,7 @@ class RankingConfig:
     def __post_init__(self) -> None:
         """Validate configuration."""
         w_sum = (
-            self.w_rtt + self.w_loss + self.w_jitter
-            + self.w_success + self.w_history
+            self.w_rtt + self.w_loss + self.w_jitter + self.w_success + self.w_history
         )
         if abs(w_sum - 1.0) > 0.01:
             raise ValueError(f"Weights must sum to 1.0, got {w_sum:.3f}")
@@ -117,6 +117,7 @@ class RankingConfig:
 # ---------------------------------------------------------------------------
 # Server score input
 # ---------------------------------------------------------------------------
+
 
 @dataclass(frozen=True, slots=True)
 class ServerScore:
@@ -150,6 +151,7 @@ class ServerScore:
 # ---------------------------------------------------------------------------
 # Ranked result
 # ---------------------------------------------------------------------------
+
 
 @dataclass(frozen=True, slots=True)
 class RankedServer:
@@ -205,6 +207,7 @@ class RankedServer:
 # Sigmoid helper
 # ---------------------------------------------------------------------------
 
+
 def _sigmoid(x: float, k: float = 4.0) -> float:
     """Sigmoid: 1 / (1 + exp(-k * x))."""
     try:
@@ -216,6 +219,7 @@ def _sigmoid(x: float, k: float = 4.0) -> float:
 # ---------------------------------------------------------------------------
 # Normalization functions
 # ---------------------------------------------------------------------------
+
 
 def normalize_rtt(
     avg_rtt: float,
@@ -369,6 +373,7 @@ def compute_confidence_score(samples: int, cv: float) -> float:
 # Ranking Engine
 # ---------------------------------------------------------------------------
 
+
 class RankingEngine:
     """Multi-criteria server ranking engine.
 
@@ -428,7 +433,9 @@ class RankingEngine:
             )
             loss_s = normalize_loss(server.loss_rate, cfg.loss_exponent)
             jit_s = normalize_jitter(
-                server.jitter, cfg.jitter_midpoint, cfg.jitter_scale,
+                server.jitter,
+                cfg.jitter_midpoint,
+                cfg.jitter_scale,
                 cfg.sigmoid_k,
             )
             succ_s = normalize_success(server.success_rate)
@@ -449,19 +456,21 @@ class RankingEngine:
             # Final score
             final = composite * conf
 
-            scored.append(RankedServer(
-                host=server.host,
-                port=server.port,
-                label=server.label,
-                rtt_score=rtt_s,
-                loss_score=loss_s,
-                jitter_score=jit_s,
-                success_score=succ_s,
-                history_score=hist_s,
-                composite_score=composite,
-                confidence=conf,
-                final_score=final,
-            ))
+            scored.append(
+                RankedServer(
+                    host=server.host,
+                    port=server.port,
+                    label=server.label,
+                    rtt_score=rtt_s,
+                    loss_score=loss_s,
+                    jitter_score=jit_s,
+                    success_score=succ_s,
+                    history_score=hist_s,
+                    composite_score=composite,
+                    confidence=conf,
+                    final_score=final,
+                )
+            )
 
         # Sort by final_score descending
         scored.sort(key=lambda s: s.final_score, reverse=True)
@@ -469,20 +478,22 @@ class RankingEngine:
         # Assign ranks
         result = []
         for i, s in enumerate(scored[:top_n] if top_n else scored, 1):
-            result.append(RankedServer(
-                host=s.host,
-                port=s.port,
-                label=s.label,
-                rtt_score=s.rtt_score,
-                loss_score=s.loss_score,
-                jitter_score=s.jitter_score,
-                success_score=s.success_score,
-                history_score=s.history_score,
-                composite_score=s.composite_score,
-                confidence=s.confidence,
-                final_score=s.final_score,
-                rank=i,
-            ))
+            result.append(
+                RankedServer(
+                    host=s.host,
+                    port=s.port,
+                    label=s.label,
+                    rtt_score=s.rtt_score,
+                    loss_score=s.loss_score,
+                    jitter_score=s.jitter_score,
+                    success_score=s.success_score,
+                    history_score=s.history_score,
+                    composite_score=s.composite_score,
+                    confidence=s.confidence,
+                    final_score=s.final_score,
+                    rank=i,
+                )
+            )
 
         return result
 

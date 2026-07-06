@@ -34,6 +34,7 @@ from uni.net.udp_socket import (
 # SocketConfig
 # ---------------------------------------------------------------------------
 
+
 class TestSocketConfig:
     """Tests for SocketConfig model."""
 
@@ -68,6 +69,7 @@ class TestSocketConfig:
 # ---------------------------------------------------------------------------
 # NetworkStats
 # ---------------------------------------------------------------------------
+
 
 class TestNetworkStats:
     """Tests for NetworkStats model."""
@@ -116,6 +118,7 @@ class TestNetworkStats:
 # SocketOptions
 # ---------------------------------------------------------------------------
 
+
 class TestSocketOptions:
     """Tests for SocketOptions."""
 
@@ -134,6 +137,7 @@ class TestSocketOptions:
 # ---------------------------------------------------------------------------
 # PacketInfo
 # ---------------------------------------------------------------------------
+
 
 class TestPacketInfo:
     """Tests for PacketInfo model."""
@@ -167,6 +171,7 @@ class TestPacketInfo:
 # ---------------------------------------------------------------------------
 # AsyncUDPSocket
 # ---------------------------------------------------------------------------
+
 
 class TestAsyncUDPSocket:
     """Tests for AsyncUDPSocket — uses loopback for real I/O."""
@@ -213,9 +218,7 @@ class TestAsyncUDPSocket:
             async with AsyncUDPSocket(
                 SocketConfig(host="127.0.0.1", port=0, timeout=2.0)
             ) as sock:
-                info = await sock.send_receive(
-                    b"ping", ("127.0.0.1", server_port)
-                )
+                info = await sock.send_receive(b"ping", ("127.0.0.1", server_port))
                 assert info.is_success
                 assert info.rtt_ms is not None
                 assert info.rtt_ms >= 0
@@ -230,9 +233,7 @@ class TestAsyncUDPSocket:
         async with AsyncUDPSocket(
             SocketConfig(host="127.0.0.1", port=0, timeout=0.1)
         ) as sock:
-            info = await sock.send_receive(
-                b"test", ("127.0.0.1", 19999)
-            )
+            info = await sock.send_receive(b"test", ("127.0.0.1", 19999))
             assert info.send_result == SendResult.TIMEOUT
 
     @pytest.mark.asyncio
@@ -296,12 +297,15 @@ class TestAsyncUDPSocket:
 # ICMPReceivedMessage
 # ---------------------------------------------------------------------------
 
+
 class TestICMPReceivedMessage:
     """Tests for ICMPReceivedMessage."""
 
     def test_time_exceeded(self) -> None:
         msg = ICMPReceivedMessage(
-            icmp_type=11, code=0, source_ip="10.0.0.1",
+            icmp_type=11,
+            code=0,
+            source_ip="10.0.0.1",
         )
         assert msg.is_time_exceeded is True
         assert msg.is_dest_unreachable is False
@@ -309,7 +313,9 @@ class TestICMPReceivedMessage:
 
     def test_dest_unreachable(self) -> None:
         msg = ICMPReceivedMessage(
-            icmp_type=3, code=3, source_ip="10.0.0.1",
+            icmp_type=3,
+            code=3,
+            source_ip="10.0.0.1",
         )
         assert msg.is_dest_unreachable is True
         assert msg.code_name == "Port Unreachable"
@@ -320,7 +326,9 @@ class TestICMPReceivedMessage:
 
     def test_to_dict(self) -> None:
         msg = ICMPReceivedMessage(
-            icmp_type=11, code=0, source_ip="10.0.0.1",
+            icmp_type=11,
+            code=0,
+            source_ip="10.0.0.1",
         )
         d = msg.to_dict()
         assert d["icmp_type"] == 11
@@ -330,6 +338,7 @@ class TestICMPReceivedMessage:
 # ---------------------------------------------------------------------------
 # _parse_icmp_packet
 # ---------------------------------------------------------------------------
+
 
 class TestParseIcmpPacket:
     """Tests for ICMP packet parsing."""
@@ -385,6 +394,7 @@ class TestParseIcmpPacket:
 # Raw socket helpers
 # ---------------------------------------------------------------------------
 
+
 class TestRawSocketHelpers:
     """Tests for raw socket helper functions."""
 
@@ -416,6 +426,7 @@ class TestRawSocketHelpers:
 # ---------------------------------------------------------------------------
 # SocketPool
 # ---------------------------------------------------------------------------
+
 
 class TestSocketPool:
     """Tests for SocketPool."""
@@ -459,6 +470,7 @@ class TestSocketPool:
 # ---------------------------------------------------------------------------
 # FirewallHelper
 # ---------------------------------------------------------------------------
+
 
 class TestFirewallHelper:
     """Tests for FirewallHelper."""
@@ -506,6 +518,7 @@ class TestFirewallHelper:
 # ---------------------------------------------------------------------------
 # Integration: loopback echo server helper
 # ---------------------------------------------------------------------------
+
 
 async def _echo_server(sock: socket.socket) -> None:
     """Simple UDP echo server for testing."""

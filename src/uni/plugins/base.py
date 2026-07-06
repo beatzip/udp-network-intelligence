@@ -11,6 +11,7 @@ from uni.app.constants import PluginState
 @dataclass
 class PluginMeta:
     """Plugin metadata."""
+
     name: str = ""
     version: str = "0.1.0"
     author: str = ""

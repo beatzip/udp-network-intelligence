@@ -58,7 +58,12 @@ class LogConsole(QWidget):
 
         self._chk_info.setChecked(True)
 
-        for chk in (self._chk_debug, self._chk_info, self._chk_warning, self._chk_error):
+        for chk in (
+            self._chk_debug,
+            self._chk_info,
+            self._chk_warning,
+            self._chk_error,
+        ):
             chk.stateChanged.connect(self._on_filter_changed)
             filter_layout.addWidget(chk)
 
@@ -81,8 +86,10 @@ class LogConsole(QWidget):
         """Install a log handler that captures to this widget."""
         self._handler = _QtLogHandler(self)
         self._handler.setFormatter(
-            logging.Formatter("%(asctime)s | %(levelname)-5s | %(name)s | %(message)s",
-                              datefmt="%H:%M:%S")
+            logging.Formatter(
+                "%(asctime)s | %(levelname)-5s | %(name)s | %(message)s",
+                datefmt="%H:%M:%S",
+            )
         )
         logging.getLogger().addHandler(self._handler)
 
@@ -110,9 +117,10 @@ class LogConsole(QWidget):
         color = self._LEVEL_COLORS.get(record.levelno, QColor("#cdd6f4"))
 
         import datetime as dt
-        time_str = dt.datetime.fromtimestamp(
-            record.created, tz=dt.UTC
-        ).strftime("%H:%M:%S")
+
+        time_str = dt.datetime.fromtimestamp(record.created, tz=dt.UTC).strftime(
+            "%H:%M:%S"
+        )
         line = f"{time_str} | {level_name:<5} | {record.name} | {record.getMessage()}\n"
 
         cursor = self._text.textCursor()

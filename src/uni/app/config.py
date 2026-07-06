@@ -39,6 +39,7 @@ logger = logging.getLogger(__name__)
 # Config section dataclasses
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class NetworkConfig:
     """Network-related configuration.
@@ -542,9 +543,7 @@ class ConfigManager:
             RuntimeError: If no configuration has been loaded yet.
         """
         if self._config is None:
-            raise RuntimeError(
-                "Configuration not loaded. Call load() first."
-            )
+            raise RuntimeError("Configuration not loaded. Call load() first.")
         return self._config
 
     @config.setter
@@ -701,17 +700,13 @@ class ConfigManager:
                     if hasattr(section, sub_key):
                         setattr(section, sub_key, sub_val)
                     else:
-                        raise KeyError(
-                            f"Unknown field {key}.{sub_key!r}"
-                        )
+                        raise KeyError(f"Unknown field {key}.{sub_key!r}")
             else:
                 setattr(cfg, key, value)
 
         errors = cfg.validate()
         if errors:
-            raise ValueError(
-                "Validation failed: " + "; ".join(errors)
-            )
+            raise ValueError("Validation failed: " + "; ".join(errors))
 
         self.save(cfg)
         return cfg
@@ -765,15 +760,11 @@ class ConfigManager:
             if hasattr(section, key):
                 setattr(section, key, value)
             else:
-                raise KeyError(
-                    f"Unknown field {section_name}.{key!r}"
-                )
+                raise KeyError(f"Unknown field {section_name}.{key!r}")
 
         errors = cfg.validate()
         if errors:
-            raise ValueError(
-                "Validation failed: " + "; ".join(errors)
-            )
+            raise ValueError("Validation failed: " + "; ".join(errors))
 
         self.save(cfg)
 
@@ -787,9 +778,7 @@ class ConfigManager:
             FileNotFoundError: If the config file does not exist.
         """
         if not self.exists():
-            raise FileNotFoundError(
-                f"Config file not found: {self.config_path}"
-            )
+            raise FileNotFoundError(f"Config file not found: {self.config_path}")
         return self._create_backup()
 
     def restore(self, backup_path: str | Path) -> AppConfig:
@@ -924,6 +913,7 @@ class ConfigManager:
 # ---------------------------------------------------------------------------
 # Serialization helpers (module-level, used by AppConfig and sections)
 # ---------------------------------------------------------------------------
+
 
 def _dataclass_to_dict(instance: Any) -> dict[str, Any]:
     """Convert a dataclass to a dictionary recursively.

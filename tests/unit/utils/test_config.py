@@ -22,6 +22,7 @@ from uni.app.config import (
 # Section defaults
 # ---------------------------------------------------------------------------
 
+
 class TestNetworkConfig:
     """Tests for NetworkConfig defaults and validation."""
 
@@ -117,6 +118,7 @@ class TestHistoryConfig:
 # AppConfig serialization
 # ---------------------------------------------------------------------------
 
+
 class TestAppConfig:
     """Tests for AppConfig dataclass."""
 
@@ -169,6 +171,7 @@ class TestAppConfig:
 # ---------------------------------------------------------------------------
 # ConfigManager — file operations
 # ---------------------------------------------------------------------------
+
 
 class TestConfigManager:
     """Tests for ConfigManager lifecycle."""
@@ -310,6 +313,7 @@ class TestConfigManager:
 # ConfigManager — backup and restore
 # ---------------------------------------------------------------------------
 
+
 class TestConfigManagerBackup:
     """Tests for backup and restore functionality."""
 
@@ -379,6 +383,7 @@ class TestConfigManagerBackup:
 # ConfigManager — migrations
 # ---------------------------------------------------------------------------
 
+
 class TestConfigManagerMigrations:
     """Tests for configuration migration system."""
 
@@ -401,9 +406,7 @@ class TestConfigManagerMigrations:
                 "socket_timeout": 10.0,
             },
         }
-        config_file.write_text(
-            json.dumps(legacy_data, indent=2), encoding="utf-8"
-        )
+        config_file.write_text(json.dumps(legacy_data, indent=2), encoding="utf-8")
 
         manager = ConfigManager(config_file)
         config = manager.load()
@@ -420,9 +423,7 @@ class TestConfigManagerMigrations:
             "config_version": 0,
             "debug": True,
         }
-        config_file.write_text(
-            json.dumps(partial_data, indent=2), encoding="utf-8"
-        )
+        config_file.write_text(json.dumps(partial_data, indent=2), encoding="utf-8")
 
         manager = ConfigManager(config_file)
         config = manager.load()
@@ -435,6 +436,7 @@ class TestConfigManagerMigrations:
 # ---------------------------------------------------------------------------
 # ConfigManager — version update
 # ---------------------------------------------------------------------------
+
 
 class TestConfigManagerVersionUpdate:
     """Tests for version update behavior."""

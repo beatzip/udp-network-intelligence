@@ -134,7 +134,11 @@ class FirewallHelper:
             return True
 
         cmd = [
-            "netsh", "advfirewall", "firewall", "add", "rule",
+            "netsh",
+            "advfirewall",
+            "firewall",
+            "add",
+            "rule",
             f"name={name}",
             f"dir={direction}",
             f"action={action}",
@@ -181,7 +185,11 @@ class FirewallHelper:
             return True
 
         cmd = [
-            "netsh", "advfirewall", "firewall", "delete", "rule",
+            "netsh",
+            "advfirewall",
+            "firewall",
+            "delete",
+            "rule",
             f"name={name}",
         ]
 
@@ -218,7 +226,11 @@ class FirewallHelper:
             return []
 
         cmd = [
-            "netsh", "advfirewall", "firewall", "show", "rule",
+            "netsh",
+            "advfirewall",
+            "firewall",
+            "show",
+            "rule",
             f"name={name_filter}" if name_filter else "all",
         ]
 

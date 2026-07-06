@@ -38,6 +38,7 @@ from typing import Any
 # Pure functions (stateless)
 # ---------------------------------------------------------------------------
 
+
 def compute_mean(values: list[float]) -> float:
     """Arithmetic mean.
 
@@ -233,9 +234,7 @@ def compute_loss_percent(sent: int, received: int) -> float:
     return compute_packet_loss(sent, received) * 100.0
 
 
-def compute_jitter_rfc3550(
-    samples: list[float], initial_jitter: float = 0.0
-) -> float:
+def compute_jitter_rfc3550(samples: list[float], initial_jitter: float = 0.0) -> float:
     """Interarrival jitter per RFC 3550 (Appendix A.8).
 
     The interarrival jitter is defined as the mean deviation of the
@@ -276,9 +275,7 @@ def compute_jitter_rfc3550(
     return jitter
 
 
-def compute_moving_average(
-    values: list[float], window: int
-) -> list[float]:
+def compute_moving_average(values: list[float], window: int) -> list[float]:
     """Simple moving average.
 
     Args:
@@ -339,9 +336,7 @@ def compute_ema(
     return ema_values
 
 
-def compute_weighted_average(
-    values: list[float], weights: list[float]
-) -> float:
+def compute_weighted_average(values: list[float], weights: list[float]) -> float:
     """Weighted average.
 
     Args:
@@ -436,6 +431,7 @@ def compute_cv(values: list[float]) -> float:
 # ---------------------------------------------------------------------------
 # Running stats engine
 # ---------------------------------------------------------------------------
+
 
 @dataclass
 class SampleStats:

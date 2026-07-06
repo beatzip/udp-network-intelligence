@@ -61,9 +61,7 @@ class ServerInfo:
     def __post_init__(self) -> None:
         """Validate server info fields."""
         if self.app_id < 0:
-            raise ValueError(
-                f"ServerInfo.app_id must be >= 0, got {self.app_id}"
-            )
+            raise ValueError(f"ServerInfo.app_id must be >= 0, got {self.app_id}")
         if self.player_count < 0:
             raise ValueError(
                 f"ServerInfo.player_count must be >= 0, got {self.player_count}"
@@ -73,9 +71,7 @@ class ServerInfo:
                 f"ServerInfo.max_players must be >= 0, got {self.max_players}"
             )
         if self.bot_count < 0:
-            raise ValueError(
-                f"ServerInfo.bot_count must be >= 0, got {self.bot_count}"
-            )
+            raise ValueError(f"ServerInfo.bot_count must be >= 0, got {self.bot_count}")
         if self.player_count > self.max_players and self.max_players > 0:
             raise ValueError(
                 f"ServerInfo.player_count ({self.player_count}) > "
@@ -117,6 +113,7 @@ class ServerInfo:
         """Clean server name (without source engine color codes)."""
         # Strip ^[0-9] color codes
         import re
+
         return re.sub(r"\^\d", "", self.name).strip()
 
     def to_dict(self) -> dict[str, Any]:
@@ -196,13 +193,9 @@ class PlayerInfo:
     def __post_init__(self) -> None:
         """Validate player info fields."""
         if self.index < 0:
-            raise ValueError(
-                f"PlayerInfo.index must be >= 0, got {self.index}"
-            )
+            raise ValueError(f"PlayerInfo.index must be >= 0, got {self.index}")
         if self.duration < 0:
-            raise ValueError(
-                f"PlayerInfo.duration must be >= 0, got {self.duration}"
-            )
+            raise ValueError(f"PlayerInfo.duration must be >= 0, got {self.duration}")
 
     @property
     def duration_minutes(self) -> float:
@@ -218,6 +211,7 @@ class PlayerInfo:
     def display_name(self) -> str:
         """Clean player name (without color codes)."""
         import re
+
         return re.sub(r"\^\d", "", self.name).strip()
 
     def to_dict(self) -> dict[str, Any]:
@@ -415,13 +409,9 @@ class QueryResult:
     def __post_init__(self) -> None:
         """Validate query result fields."""
         if self.port < 0 or self.port > 65535:
-            raise ValueError(
-                f"QueryResult.port must be 0-65535, got {self.port}"
-            )
+            raise ValueError(f"QueryResult.port must be 0-65535, got {self.port}")
         if self.rtt_ms < 0:
-            raise ValueError(
-                f"QueryResult.rtt_ms must be >= 0, got {self.rtt_ms}"
-            )
+            raise ValueError(f"QueryResult.rtt_ms must be >= 0, got {self.rtt_ms}")
 
     @property
     def is_success(self) -> bool:

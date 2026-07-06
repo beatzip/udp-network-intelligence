@@ -144,6 +144,7 @@ CREATE TABLE IF NOT EXISTS meta (
 # Data models
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class MeasurementRecord:
     """Record of a completed probe measurement campaign.
@@ -382,9 +383,11 @@ class ErrorRecord:
 # Query filters
 # ---------------------------------------------------------------------------
 
+
 @dataclass(frozen=True, slots=True)
 class MeasurementFilter:
     """Filter criteria for querying measurements."""
+
     host: str | None = None
     port: int | None = None
     mode: str | None = None
@@ -399,6 +402,7 @@ class MeasurementFilter:
 @dataclass(frozen=True, slots=True)
 class ErrorFilter:
     """Filter criteria for querying errors."""
+
     host: str | None = None
     port: int | None = None
     error_type: str | None = None
@@ -412,6 +416,7 @@ class ErrorFilter:
 # ---------------------------------------------------------------------------
 # History Repository
 # ---------------------------------------------------------------------------
+
 
 class HistoryRepository:
     """SQLite-based history repository.
@@ -510,9 +515,7 @@ class HistoryRepository:
     def _get_meta(self, key: str) -> str | None:
         """Get a metadata value."""
         conn = self._get_conn()
-        row = conn.execute(
-            "SELECT value FROM meta WHERE key = ?", (key,)
-        ).fetchone()
+        row = conn.execute("SELECT value FROM meta WHERE key = ?", (key,)).fetchone()
         return row["value"] if row else None
 
     def _set_meta(self, key: str, value: str) -> None:
@@ -642,9 +645,7 @@ class HistoryRepository:
             ).fetchall()
             return [self._row_to_measurement(r) for r in rows]
 
-    async def count_measurements(
-        self, host: str | None = None
-    ) -> int:
+    async def count_measurements(self, host: str | None = None) -> int:
         """Count measurement records.
 
         Args:
@@ -735,10 +736,20 @@ class HistoryRepository:
                     metadata = excluded.metadata
                 """,
                 (
-                    record.host, record.port, record.first_seen, record.last_seen,
-                    record.name, record.map_name, record.game, record.app_id,
-                    record.player_count, record.max_players, record.version,
-                    record.country_code, record.keywords, json.dumps(record.metadata),
+                    record.host,
+                    record.port,
+                    record.first_seen,
+                    record.last_seen,
+                    record.name,
+                    record.map_name,
+                    record.game,
+                    record.app_id,
+                    record.player_count,
+                    record.max_players,
+                    record.version,
+                    record.country_code,
+                    record.keywords,
+                    json.dumps(record.metadata),
                 ),
             )
             conn.commit()
@@ -860,11 +871,19 @@ class HistoryRepository:
                  final_score, rank, total_servers, metadata)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 (
-                    record.host, record.port, record.timestamp,
-                    record.rtt_score, record.loss_score, record.jitter_score,
-                    record.success_score, record.history_score,
-                    record.composite_score, record.confidence,
-                    record.final_score, record.rank, record.total_servers,
+                    record.host,
+                    record.port,
+                    record.timestamp,
+                    record.rtt_score,
+                    record.loss_score,
+                    record.jitter_score,
+                    record.success_score,
+                    record.history_score,
+                    record.composite_score,
+                    record.confidence,
+                    record.final_score,
+                    record.rank,
+                    record.total_servers,
                     json.dumps(record.metadata),
                 ),
             )
@@ -949,9 +968,7 @@ class HistoryRepository:
                     "SELECT COUNT(*) as cnt FROM rankings WHERE host = ?", (host,)
                 ).fetchone()
             else:
-                row = conn.execute(
-                    "SELECT COUNT(*) as cnt FROM rankings"
-                ).fetchone()
+                row = conn.execute("SELECT COUNT(*) as cnt FROM rankings").fetchone()
             return row["cnt"] if row else 0
 
     # ------------------------------------------------------------------
@@ -974,9 +991,13 @@ class HistoryRepository:
                 (timestamp, host, port, error_type, error_message, context, resolved)
                 VALUES (?, ?, ?, ?, ?, ?, ?)""",
                 (
-                    record.timestamp, record.host, record.port,
-                    record.error_type, record.error_message,
-                    json.dumps(record.context), 1 if record.resolved else 0,
+                    record.timestamp,
+                    record.host,
+                    record.port,
+                    record.error_type,
+                    record.error_message,
+                    json.dumps(record.context),
+                    1 if record.resolved else 0,
                 ),
             )
             conn.commit()
@@ -1109,9 +1130,7 @@ class HistoryRepository:
                 "AVG(quality_score) as avg_quality FROM measurements"
             ).fetchone()
 
-            servers = conn.execute(
-                "SELECT COUNT(*) as cnt FROM servers"
-            ).fetchone()
+            servers = conn.execute("SELECT COUNT(*) as cnt FROM servers").fetchone()
 
             errors = conn.execute(
                 "SELECT COUNT(*) as cnt, SUM(CASE WHEN resolved=1 THEN 1 ELSE 0 END) as resolved "
@@ -1120,8 +1139,12 @@ class HistoryRepository:
 
             return {
                 "measurements_total": measurements["cnt"] if measurements else 0,
-                "measurements_avg_rtt": round(measurements["avg_rtt"] or 0, 2) if measurements else 0,
-                "measurements_avg_quality": round(measurements["avg_quality"] or 0, 4) if measurements else 0,
+                "measurements_avg_rtt": round(measurements["avg_rtt"] or 0, 2)
+                if measurements
+                else 0,
+                "measurements_avg_quality": round(measurements["avg_quality"] or 0, 4)
+                if measurements
+                else 0,
                 "servers_total": servers["cnt"] if servers else 0,
                 "errors_total": errors["cnt"] if errors else 0,
                 "errors_resolved": errors["resolved"] or 0 if errors else 0,

@@ -53,6 +53,7 @@ _COLOR_GRID = "#313244"
 # Base chart
 # ---------------------------------------------------------------------------
 
+
 class BaseChart(pg.PlotWidget):  # type: ignore[misc]
     """Base class for all real-time charts.
 
@@ -113,8 +114,8 @@ class BaseChart(pg.PlotWidget):  # type: ignore[misc]
 
         # Trim to max points
         if len(self._values) > self._max_points:
-            self._values = self._values[-self._max_points:]
-            self._timestamps = self._timestamps[-self._max_points:]
+            self._values = self._values[-self._max_points :]
+            self._timestamps = self._timestamps[-self._max_points :]
 
         self._update_plot()
 
@@ -146,7 +147,9 @@ class BaseChart(pg.PlotWidget):  # type: ignore[misc]
         self._pen.setColor(color)
         self._curve.setPen(self._pen)
 
-    def add_horizontal_line(self, y: float, color: str = _COLOR_YELLOW, label: str = "") -> None:
+    def add_horizontal_line(
+        self, y: float, color: str = _COLOR_YELLOW, label: str = ""
+    ) -> None:
         """Add a horizontal reference line.
 
         Args:
@@ -160,7 +163,9 @@ class BaseChart(pg.PlotWidget):  # type: ignore[misc]
         pen.setWidth(1)
         self.addLine(y=y, pen=pen, label=label)
 
-    def add_threshold_band(self, y_min: float, y_max: float, color: str = "#4ade8020") -> None:
+    def add_threshold_band(
+        self, y_min: float, y_max: float, color: str = "#4ade8020"
+    ) -> None:
         """Add a shaded threshold band.
 
         Args:
@@ -169,16 +174,21 @@ class BaseChart(pg.PlotWidget):  # type: ignore[misc]
             color: Fill color (with alpha).
         """
         from PySide6.QtGui import QBrush, QColor
+
         brush = QBrush(QColor(color))
         self.plot(
-            [self._timestamps[0] if self._timestamps else 0,
-             self._timestamps[-1] if self._timestamps else 1],
+            [
+                self._timestamps[0] if self._timestamps else 0,
+                self._timestamps[-1] if self._timestamps else 1,
+            ],
             [y_max, y_max],
             pen=pg.mkPen(None),
             brush=brush,
         )
 
-    def export_png(self, filepath: str | Path, width: int = 1920, height: int = 1080) -> None:
+    def export_png(
+        self, filepath: str | Path, width: int = 1920, height: int = 1080
+    ) -> None:
         """Export the chart to a PNG file.
 
         Args:
@@ -229,6 +239,7 @@ class BaseChart(pg.PlotWidget):  # type: ignore[misc]
 # RTT Chart
 # ---------------------------------------------------------------------------
 
+
 class RTTChart(BaseChart):
     """Real-time RTT (latency) chart.
 
@@ -249,7 +260,9 @@ class RTTChart(BaseChart):
 
     def __init__(self, parent: QWidget | None = None, max_points: int = 200) -> None:
         super().__init__(
-            parent, title="RTT (ms)", max_points=max_points,
+            parent,
+            title="RTT (ms)",
+            max_points=max_points,
             pen_color=_COLOR_GREEN,
         )
         # Add default threshold lines
@@ -281,6 +294,7 @@ class RTTChart(BaseChart):
 # Loss Chart
 # ---------------------------------------------------------------------------
 
+
 class LossChart(BaseChart):
     """Packet loss percentage chart.
 
@@ -299,7 +313,9 @@ class LossChart(BaseChart):
 
     def __init__(self, parent: QWidget | None = None, max_points: int = 200) -> None:
         super().__init__(
-            parent, title="Loss (%)", max_points=max_points,
+            parent,
+            title="Loss (%)",
+            max_points=max_points,
             pen_color=_COLOR_RED,
         )
         self.setYRange(0, 10, padding=0.1)
@@ -330,6 +346,7 @@ class LossChart(BaseChart):
 # Jitter Chart
 # ---------------------------------------------------------------------------
 
+
 class JitterChart(BaseChart):
     """Jitter chart displaying inter-packet delay variation.
 
@@ -347,7 +364,9 @@ class JitterChart(BaseChart):
 
     def __init__(self, parent: QWidget | None = None, max_points: int = 200) -> None:
         super().__init__(
-            parent, title="Jitter (ms)", max_points=max_points,
+            parent,
+            title="Jitter (ms)",
+            max_points=max_points,
             pen_color=_COLOR_PURPLE,
         )
         self.add_horizontal_line(15.0, _COLOR_YELLOW, "15ms")
@@ -376,6 +395,7 @@ class JitterChart(BaseChart):
 # History Chart
 # ---------------------------------------------------------------------------
 
+
 class HistoryChart(BaseChart):
     """Historical data chart with timestamps.
 
@@ -393,7 +413,9 @@ class HistoryChart(BaseChart):
 
     def __init__(self, parent: QWidget | None = None, max_points: int = 1000) -> None:
         super().__init__(
-            parent, title="History", max_points=max_points,
+            parent,
+            title="History",
+            max_points=max_points,
             pen_color=_COLOR_BLUE,
         )
         self.setLabel("bottom", "Time", color=_COLOR_TEXT)
@@ -429,6 +451,7 @@ class HistoryChart(BaseChart):
 # ---------------------------------------------------------------------------
 # Stats Summary Widget
 # ---------------------------------------------------------------------------
+
 
 class StatsSummary(QWidget):
     """Compact statistics summary with labels.
@@ -469,9 +492,7 @@ class StatsSummary(QWidget):
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         value_label = QLabel(value)
-        value_label.setStyleSheet(
-            "color: #cdd6f4; font-size: 16px; font-weight: bold;"
-        )
+        value_label.setStyleSheet("color: #cdd6f4; font-size: 16px; font-weight: bold;")
         value_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         v_layout.addWidget(title_label)
@@ -510,6 +531,7 @@ class StatsSummary(QWidget):
 # Chart container with export button
 # ---------------------------------------------------------------------------
 
+
 class ChartPanel(QWidget):
     """Chart widget with title and export button.
 
@@ -539,9 +561,7 @@ class ChartPanel(QWidget):
         # Header
         header = QHBoxLayout()
         title_label = QLabel(title)
-        title_label.setStyleSheet(
-            "color: #cdd6f4; font-size: 12px; font-weight: bold;"
-        )
+        title_label.setStyleSheet("color: #cdd6f4; font-size: 12px; font-weight: bold;")
         header.addWidget(title_label)
         header.addStretch()
 
@@ -574,9 +594,9 @@ class ChartPanel(QWidget):
     def _on_export(self) -> None:
         """Handle export button click."""
         from PySide6.QtWidgets import QFileDialog
+
         filepath, _ = QFileDialog.getSaveFileName(
-            self, "Export Chart", f"{self._export_title}.png",
-            "PNG Files (*.png)"
+            self, "Export Chart", f"{self._export_title}.png", "PNG Files (*.png)"
         )
         if filepath:
             self._chart.export_png(filepath)

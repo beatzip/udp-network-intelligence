@@ -35,6 +35,7 @@ logger = logging.getLogger(__name__)
 # IP Header construction
 # ---------------------------------------------------------------------------
 
+
 def _build_ip_header(
     src_ip: str,
     dst_ip: str,
@@ -123,6 +124,7 @@ def _ip_checksum(data: bytes) -> int:
 # RawSocketManager
 # ---------------------------------------------------------------------------
 
+
 class RawSocketManager:
     """Manager for raw UDP socket operations.
 
@@ -177,9 +179,7 @@ class RawSocketManager:
                     socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_RAW
                 )
                 # Set IP_HDRINCL to indicate we provide the IP header
-                self._sock.setsockopt(
-                    socket.IPPROTO_IP, socket.IP_HDRINCL, 1
-                )
+                self._sock.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
             else:
                 # Linux/macOS: raw UDP socket
                 self._sock = socket.socket(
@@ -191,9 +191,7 @@ class RawSocketManager:
             logger.debug("Raw socket opened")
 
         except PermissionError:
-            logger.warning(
-                "Raw socket requires admin privileges"
-            )
+            logger.warning("Raw socket requires admin privileges")
             raise
         except OSError as exc:
             logger.warning("Failed to open raw socket: %s", exc)
@@ -364,6 +362,7 @@ class RawSocketManager:
 # ---------------------------------------------------------------------------
 # RawPacketInfo
 # ---------------------------------------------------------------------------
+
 
 @dataclass(frozen=True, slots=True)
 class RawPacketInfo:

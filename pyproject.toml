@@ -28,6 +28,8 @@ classifiers = [
 dependencies = [
     "pyside6>=6.6.0",
     "pyside6-essentials>=6.6.0",
+    "pyqtgraph>=0.14.0",
+    "numpy>=1.25.0",
 ]
 
 [project.optional-dependencies]

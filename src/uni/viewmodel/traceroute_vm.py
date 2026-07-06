@@ -99,15 +99,15 @@ class TracerouteViewModel(BaseViewModel):
                     if pkt.is_success and pkt.source[0] == target_ip:
                         break
 
-            self.traceroute_completed.emit({
-                "target": host,
-                "hops": self._hops,
-                "resolved": len([h for h in self._hops if not h["is_timeout"]]),
-                "total": len(self._hops),
-            })
-            self.emit_status(
-                f"Traceroute complete: {self.hop_count} hops resolved"
+            self.traceroute_completed.emit(
+                {
+                    "target": host,
+                    "hops": self._hops,
+                    "resolved": len([h for h in self._hops if not h["is_timeout"]]),
+                    "total": len(self._hops),
+                }
             )
+            self.emit_status(f"Traceroute complete: {self.hop_count} hops resolved")
 
         except Exception as exc:
             self.emit_error(f"Traceroute failed: {exc}")

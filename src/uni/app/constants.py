@@ -18,6 +18,7 @@ from typing import Any, Self
 # Enums
 # ---------------------------------------------------------------------------
 
+
 class ProbeProtocol(enum.Enum):
     """Supported probe protocols for network measurement."""
 
@@ -94,8 +95,14 @@ class QualityGrade(enum.Enum):
     def numeric_value(self) -> int:
         """Numeric score (8 = A+ down to 1 = F) for sorting and averaging."""
         order = {
-            "A+": 8, "A": 7, "B+": 6, "B": 5,
-            "C+": 4, "C": 3, "D": 2, "F": 1,
+            "A+": 8,
+            "A": 7,
+            "B+": 6,
+            "B": 5,
+            "C+": 4,
+            "C": 3,
+            "D": 2,
+            "F": 1,
         }
         return order[self.value]
 
@@ -327,6 +334,7 @@ MIN_WINDOW_HEIGHT = 600
 # Dataclasses
 # ---------------------------------------------------------------------------
 
+
 @dataclass(frozen=True, slots=True)
 class NetworkTarget:
     """Represents a network target identified by host and port.
@@ -403,7 +411,7 @@ class NetworkTarget:
         if target.startswith("["):
             bracket_end = target.index("]")
             host = target[1:bracket_end]
-            port_str = target[bracket_end + 2:]  # skip ]:
+            port_str = target[bracket_end + 2 :]  # skip ]:
             return cls(host=host, port=int(port_str))
 
         # Handle IPv4 or hostname:port
@@ -411,7 +419,7 @@ class NetworkTarget:
         if last_colon == -1:
             raise ValueError(f"Invalid target format (expected host:port): {target!r}")
         host = target[:last_colon]
-        port_str = target[last_colon + 1:]
+        port_str = target[last_colon + 1 :]
         return cls(host=host, port=int(port_str))
 
     @property
@@ -564,7 +572,5 @@ class TracerouteDefaults:
             probes_per_hop=int(
                 data.get("probes_per_hop", DEFAULT_TRACEROUTE_PROBES_PER_HOP)
             ),
-            hop_timeout=float(
-                data.get("hop_timeout", DEFAULT_TRACEROUTE_HOP_TIMEOUT)
-            ),
+            hop_timeout=float(data.get("hop_timeout", DEFAULT_TRACEROUTE_HOP_TIMEOUT)),
         )

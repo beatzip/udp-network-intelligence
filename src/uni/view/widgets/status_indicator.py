@@ -39,6 +39,7 @@ class StatusIndicator(QWidget):
     def _update_dot(self) -> None:
         """Repaint the status dot."""
         from PySide6.QtGui import QPixmap
+
         pixmap = QPixmap(self._size, self._size)
         pixmap.fill(Qt.GlobalColor.transparent)
         painter = QPainter(pixmap)

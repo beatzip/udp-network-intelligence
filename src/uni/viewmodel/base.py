@@ -36,10 +36,10 @@ class BaseViewModel(QObject):
     """
 
     # Common signals
-    error_occurred = Signal(str)           # error message
-    status_changed = Signal(str)          # status text
-    loading_changed = Signal(bool)        # loading state
-    data_changed = Signal()               # generic data refresh trigger
+    error_occurred = Signal(str)  # error message
+    status_changed = Signal(str)  # status text
+    loading_changed = Signal(bool)  # loading state
+    data_changed = Signal()  # generic data refresh trigger
 
     def __init__(self, parent: QObject | None = None) -> None:
         """Initialize the ViewModel.

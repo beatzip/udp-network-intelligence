@@ -161,6 +161,7 @@ KNOWN_APPIDS: dict[int, str] = {
 # Enums
 # ---------------------------------------------------------------------------
 
+
 class ServerType(Enum):
     """Server type byte from A2S_INFO response."""
 
@@ -198,6 +199,7 @@ class Platform(Enum):
 # Protocol result types
 # ---------------------------------------------------------------------------
 
+
 class QueryStatus(Enum):
     """Status of an A2S query exchange."""
 
@@ -218,6 +220,7 @@ class QueryStatus(Enum):
 # ---------------------------------------------------------------------------
 # Wire packet structures
 # ---------------------------------------------------------------------------
+
 
 @dataclass(frozen=True, slots=True)
 class WireRequest:
@@ -303,6 +306,7 @@ class WireResponse:
 # ---------------------------------------------------------------------------
 # String reader helper
 # ---------------------------------------------------------------------------
+
 
 class _ByteReader:
     """Sequential byte reader for parsing binary protocol data.
@@ -427,6 +431,7 @@ class _ByteReader:
 # ---------------------------------------------------------------------------
 # A2S_INFO Decoder
 # ---------------------------------------------------------------------------
+
 
 class A2SInfoDecoder:
     """Decoder for A2S_INFO response packets.
@@ -586,6 +591,7 @@ class A2SInfoDecoder:
 # A2S_PLAYER Decoder
 # ---------------------------------------------------------------------------
 
+
 class A2SPlayerDecoder:
     """Decoder for A2S_PLAYER response packets.
 
@@ -616,9 +622,7 @@ class A2SPlayerDecoder:
         try:
             type_byte = reader.read_byte()
         except ProtocolValidationError as exc:
-            raise ProtocolValidationError(
-                "A2S_PLAYER response too short"
-            ) from exc
+            raise ProtocolValidationError("A2S_PLAYER response too short") from exc
 
         if type_byte != RESP_PLAYER:
             raise ProtocolValidationError(
@@ -643,6 +647,7 @@ class A2SPlayerDecoder:
 # ---------------------------------------------------------------------------
 # A2S_RULES Decoder
 # ---------------------------------------------------------------------------
+
 
 class A2SRulesDecoder:
     """Decoder for A2S_RULES response packets.
@@ -674,9 +679,7 @@ class A2SRulesDecoder:
         try:
             type_byte = reader.read_byte()
         except ProtocolValidationError as exc:
-            raise ProtocolValidationError(
-                "A2S_RULES response too short"
-            ) from exc
+            raise ProtocolValidationError("A2S_RULES response too short") from exc
 
         if type_byte != RESP_RULES:
             raise ProtocolValidationError(
@@ -697,6 +700,7 @@ class A2SRulesDecoder:
 # ---------------------------------------------------------------------------
 # A2S Query Protocol (full encoder + decoder)
 # ---------------------------------------------------------------------------
+
 
 class A2SQueryProtocol(BaseProtocol):
     """Full A2S (Source Query) protocol implementation.
@@ -804,13 +808,9 @@ class A2SQueryProtocol(BaseProtocol):
             ProtocolValidationError: If the packet header is wrong.
         """
         if len(data) < 5:
-            raise ProtocolValidationError(
-                f"A2S response too short: {len(data)} bytes"
-            )
+            raise ProtocolValidationError(f"A2S response too short: {len(data)} bytes")
         if data[:4] != HEADER_BYTES:
-            raise ProtocolValidationError(
-                f"Invalid A2S header: {data[:4]!r}"
-            )
+            raise ProtocolValidationError(f"Invalid A2S header: {data[:4]!r}")
 
         return WireResponse(
             header=data[:4],

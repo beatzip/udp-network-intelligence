@@ -176,7 +176,7 @@ class GeoInfo:
         if not self.country_code or len(self.country_code) != 2:
             return ""
         # Regional Indicator Symbol: base + letter offset
-        base = ord("\U0001F1E6") - ord("A")
+        base = ord("\U0001f1e6") - ord("A")
         return chr(base + ord(self.country_code[0])) + chr(
             base + ord(self.country_code[1])
         )

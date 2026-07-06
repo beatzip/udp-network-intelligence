@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class ManagedTask:
     """Wrapper around an asyncio Task with metadata."""
+
     name: str
     task: asyncio.Task[Any]
 

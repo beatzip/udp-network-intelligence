@@ -140,21 +140,15 @@ class IPHeader:
     def __post_init__(self) -> None:
         """Validate IP header fields."""
         if not (4 <= self.version <= 6):
-            raise ValueError(
-                f"IPHeader.version must be 4 or 6, got {self.version}"
-            )
+            raise ValueError(f"IPHeader.version must be 4 or 6, got {self.version}")
         if self.ihl < IP_HEADER_MIN_LENGTH:
             raise ValueError(
                 f"IPHeader.ihl must be >= {IP_HEADER_MIN_LENGTH}, got {self.ihl}"
             )
         if not (0 <= self.ttl <= 255):
-            raise ValueError(
-                f"IPHeader.ttl must be 0-255, got {self.ttl}"
-            )
+            raise ValueError(f"IPHeader.ttl must be 0-255, got {self.ttl}")
         if not (0 <= self.protocol <= 255):
-            raise ValueError(
-                f"IPHeader.protocol must be 0-255, got {self.protocol}"
-            )
+            raise ValueError(f"IPHeader.protocol must be 0-255, got {self.protocol}")
 
     @property
     def is_udp(self) -> bool:
@@ -268,9 +262,7 @@ class ICMPMessage:
                 f"ICMPMessage.icmp_type must be 0-255, got {self.icmp_type}"
             )
         if not (0 <= self.code <= 255):
-            raise ValueError(
-                f"ICMPMessage.code must be 0-255, got {self.code}"
-            )
+            raise ValueError(f"ICMPMessage.code must be 0-255, got {self.code}")
 
     @property
     def is_echo_reply(self) -> bool:
@@ -417,9 +409,7 @@ class A2SPacket:
         """Validate A2S packet fields."""
         if self.packet_size == 0:
             # Auto-calculate from header + payload
-            object.__setattr__(
-                self, "packet_size", A2S_HEADER_SIZE + len(self.payload)
-            )
+            object.__setattr__(self, "packet_size", A2S_HEADER_SIZE + len(self.payload))
 
     @property
     def is_info_response(self) -> bool:
@@ -474,9 +464,7 @@ class A2SPacket:
             "payload": list(self.payload),
             "challenge": self.challenge,
             "request_type": self.request_type.value if self.request_type else None,
-            "response_type": (
-                self.response_type.value if self.response_type else None
-            ),
+            "response_type": (self.response_type.value if self.response_type else None),
             "packet_size": self.packet_size,
         }
 
@@ -497,12 +485,8 @@ class A2SPacket:
             header=int(data.get("header", 0)),
             payload=bytes(payload_raw) if isinstance(payload_raw, list) else b"",
             challenge=int(data.get("challenge", 0)),
-            request_type=(
-                A2SRequestType(req_raw) if req_raw is not None else None
-            ),
-            response_type=(
-                A2SResponseType(resp_raw) if resp_raw is not None else None
-            ),
+            request_type=(A2SRequestType(req_raw) if req_raw is not None else None),
+            response_type=(A2SResponseType(resp_raw) if resp_raw is not None else None),
             packet_size=int(data.get("packet_size", 0)),
         )
 
@@ -560,9 +544,7 @@ class Packet:
                 f"Packet.source_port must be 0-65535, got {self.source_port}"
             )
         if self.dest_port < 0 or self.dest_port > 65535:
-            raise ValueError(
-                f"Packet.dest_port must be 0-65535, got {self.dest_port}"
-            )
+            raise ValueError(f"Packet.dest_port must be 0-65535, got {self.dest_port}")
 
     @property
     def size(self) -> int:

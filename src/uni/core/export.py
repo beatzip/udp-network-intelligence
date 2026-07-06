@@ -42,6 +42,7 @@ logger = logging.getLogger(__name__)
 # Unified report data model
 # ---------------------------------------------------------------------------
 
+
 @dataclass
 class ReportHeader:
     """Report metadata header.
@@ -315,6 +316,7 @@ class ReportData:
 # Export Engine
 # ---------------------------------------------------------------------------
 
+
 class ExportEngine:
     """Unified export engine producing JSON, CSV, HTML, PDF.
 
@@ -410,12 +412,14 @@ class ExportEngine:
 
         # Servers
         if report.servers:
-            html_parts.extend([
-                "<h2>Servers</h2>",
-                "<table>",
-                "<tr><th>Rank</th><th>Host</th><th>Name</th><th>Map</th>"
-                "<th>Players</th><th>Score</th></tr>",
-            ])
+            html_parts.extend(
+                [
+                    "<h2>Servers</h2>",
+                    "<table>",
+                    "<tr><th>Rank</th><th>Host</th><th>Name</th><th>Map</th>"
+                    "<th>Players</th><th>Score</th></tr>",
+                ]
+            )
             for srv in report.servers:
                 html_parts.append(
                     f"<tr><td>{srv.rank}</td><td>{srv.host}:{srv.port}</td>"
@@ -427,12 +431,14 @@ class ExportEngine:
 
         # Measurements
         if report.measurements:
-            html_parts.extend([
-                "<h2>Measurements</h2>",
-                "<table>",
-                "<tr><th>Target</th><th>Mode</th><th>Avg RTT</th>"
-                "<th>Loss</th><th>Jitter</th><th>Grade</th><th>Duration</th></tr>",
-            ])
+            html_parts.extend(
+                [
+                    "<h2>Measurements</h2>",
+                    "<table>",
+                    "<tr><th>Target</th><th>Mode</th><th>Avg RTT</th>"
+                    "<th>Loss</th><th>Jitter</th><th>Grade</th><th>Duration</th></tr>",
+                ]
+            )
             for m in report.measurements:
                 html_parts.append(
                     f"<tr><td>{m.target}</td><td>{m.mode}</td>"
@@ -446,16 +452,22 @@ class ExportEngine:
 
         # Errors
         if report.errors:
-            html_parts.extend([
-                "<h2>Errors</h2>",
-                "<table>",
-                "<tr><th>Time</th><th>Host</th><th>Type</th>"
-                "<th>Message</th><th>Resolved</th></tr>",
-            ])
+            html_parts.extend(
+                [
+                    "<h2>Errors</h2>",
+                    "<table>",
+                    "<tr><th>Time</th><th>Host</th><th>Type</th>"
+                    "<th>Message</th><th>Resolved</th></tr>",
+                ]
+            )
             for e in report.errors:
-                ts = datetime.fromtimestamp(
-                    e.timestamp, tz=UTC
-                ).strftime("%Y-%m-%d %H:%M:%S") if e.timestamp else ""
+                ts = (
+                    datetime.fromtimestamp(e.timestamp, tz=UTC).strftime(
+                        "%Y-%m-%d %H:%M:%S"
+                    )
+                    if e.timestamp
+                    else ""
+                )
                 resolved = "Yes" if e.resolved else "No"
                 html_parts.append(
                     f"<tr><td>{ts}</td><td>{e.host}:{e.port}</td>"

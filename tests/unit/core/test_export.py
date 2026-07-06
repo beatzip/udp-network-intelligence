@@ -21,6 +21,7 @@ from uni.core.export import (
 # ReportHeader
 # ---------------------------------------------------------------------------
 
+
 class TestReportHeader:
     def test_default_timestamp(self) -> None:
         h = ReportHeader()
@@ -38,6 +39,7 @@ class TestReportHeader:
 # ReportSummary
 # ---------------------------------------------------------------------------
 
+
 class TestReportSummary:
     def test_to_dict(self) -> None:
         s = ReportSummary(total_servers=5, avg_rtt=15.0)
@@ -49,6 +51,7 @@ class TestReportSummary:
 # ---------------------------------------------------------------------------
 # ReportServer
 # ---------------------------------------------------------------------------
+
 
 class TestReportServer:
     def test_to_dict(self) -> None:
@@ -62,11 +65,14 @@ class TestReportServer:
 # ReportMeasurement
 # ---------------------------------------------------------------------------
 
+
 class TestReportMeasurement:
     def test_to_dict(self) -> None:
         m = ReportMeasurement(
-            target="1.2.3.4:27015", mode="normal",
-            avg_rtt=15.0, grade="A",
+            target="1.2.3.4:27015",
+            mode="normal",
+            avg_rtt=15.0,
+            grade="A",
         )
         d = m.to_dict()
         assert d["target"] == "1.2.3.4:27015"
@@ -76,6 +82,7 @@ class TestReportMeasurement:
 # ---------------------------------------------------------------------------
 # ReportError
 # ---------------------------------------------------------------------------
+
 
 class TestReportError:
     def test_to_dict(self) -> None:
@@ -89,6 +96,7 @@ class TestReportError:
 # ReportData
 # ---------------------------------------------------------------------------
 
+
 class TestReportData:
     def test_empty_report(self) -> None:
         r = ReportData()
@@ -100,14 +108,24 @@ class TestReportData:
 
     def test_add_measurement_updates_summary(self) -> None:
         r = ReportData()
-        r.add_measurement(ReportMeasurement(
-            target="a:27015", avg_rtt=10.0, jitter=2.0, loss_percent=1.0,
-            quality_score=0.9,
-        ))
-        r.add_measurement(ReportMeasurement(
-            target="b:27015", avg_rtt=20.0, jitter=5.0, loss_percent=3.0,
-            quality_score=0.6,
-        ))
+        r.add_measurement(
+            ReportMeasurement(
+                target="a:27015",
+                avg_rtt=10.0,
+                jitter=2.0,
+                loss_percent=1.0,
+                quality_score=0.9,
+            )
+        )
+        r.add_measurement(
+            ReportMeasurement(
+                target="b:27015",
+                avg_rtt=20.0,
+                jitter=5.0,
+                loss_percent=3.0,
+                quality_score=0.6,
+            )
+        )
         assert r.summary.total_measurements == 2
         assert r.summary.avg_rtt == 15.0
         assert r.summary.best_server == "a:27015"
@@ -137,6 +155,7 @@ class TestReportData:
 # ExportEngine
 # ---------------------------------------------------------------------------
 
+
 class TestExportEngine:
     @pytest.fixture
     def engine(self) -> ExportEngine:
@@ -145,32 +164,62 @@ class TestExportEngine:
     @pytest.fixture
     def sample_report(self) -> ReportData:
         r = ReportData(header=ReportHeader(title="Test Report"))
-        r.add_measurement(ReportMeasurement(
-            target="10.0.0.1:27015", mode="normal",
-            avg_rtt=15.0, min_rtt=10.0, max_rtt=25.0,
-            jitter=3.0, loss_percent=2.0,
-            sent=50, received=49, grade="A", quality_score=0.92,
-            duration=25.0,
-        ))
-        r.add_measurement(ReportMeasurement(
-            target="10.0.0.2:27015", mode="deep",
-            avg_rtt=45.0, min_rtt=30.0, max_rtt=60.0,
-            jitter=8.0, loss_percent=5.0,
-            sent=100, received=95, grade="B", quality_score=0.75,
-            duration=50.0,
-        ))
-        r.add_server(ReportServer(
-            host="10.0.0.1", name="Fast Server", rank=1,
-            final_score=0.95,
-        ))
-        r.add_server(ReportServer(
-            host="10.0.0.2", name="Slow Server", rank=2,
-            final_score=0.65,
-        ))
-        r.add_error(ReportError(
-            timestamp=1000.0, host="10.0.0.2", error_type="timeout",
-            message="Connection timed out",
-        ))
+        r.add_measurement(
+            ReportMeasurement(
+                target="10.0.0.1:27015",
+                mode="normal",
+                avg_rtt=15.0,
+                min_rtt=10.0,
+                max_rtt=25.0,
+                jitter=3.0,
+                loss_percent=2.0,
+                sent=50,
+                received=49,
+                grade="A",
+                quality_score=0.92,
+                duration=25.0,
+            )
+        )
+        r.add_measurement(
+            ReportMeasurement(
+                target="10.0.0.2:27015",
+                mode="deep",
+                avg_rtt=45.0,
+                min_rtt=30.0,
+                max_rtt=60.0,
+                jitter=8.0,
+                loss_percent=5.0,
+                sent=100,
+                received=95,
+                grade="B",
+                quality_score=0.75,
+                duration=50.0,
+            )
+        )
+        r.add_server(
+            ReportServer(
+                host="10.0.0.1",
+                name="Fast Server",
+                rank=1,
+                final_score=0.95,
+            )
+        )
+        r.add_server(
+            ReportServer(
+                host="10.0.0.2",
+                name="Slow Server",
+                rank=2,
+                final_score=0.65,
+            )
+        )
+        r.add_error(
+            ReportError(
+                timestamp=1000.0,
+                host="10.0.0.2",
+                error_type="timeout",
+                message="Connection timed out",
+            )
+        )
         return r
 
     def test_to_json(self, engine: ExportEngine, sample_report: ReportData) -> None:
@@ -198,31 +247,41 @@ class TestExportEngine:
         assert "10.0.0.1" in html
         assert "<table>" in html
 
-    def test_save_json(self, engine: ExportEngine, sample_report: ReportData, tmp_path: Path) -> None:
+    def test_save_json(
+        self, engine: ExportEngine, sample_report: ReportData, tmp_path: Path
+    ) -> None:
         path = engine.save(sample_report, tmp_path / "report.json")
         assert path.exists()
         data = json.loads(path.read_text())
         assert data["header"]["title"] == "Test Report"
 
-    def test_save_csv(self, engine: ExportEngine, sample_report: ReportData, tmp_path: Path) -> None:
+    def test_save_csv(
+        self, engine: ExportEngine, sample_report: ReportData, tmp_path: Path
+    ) -> None:
         path = engine.save(sample_report, tmp_path / "report.csv")
         assert path.exists()
         content = path.read_text()
         assert "target" in content
 
-    def test_save_html(self, engine: ExportEngine, sample_report: ReportData, tmp_path: Path) -> None:
+    def test_save_html(
+        self, engine: ExportEngine, sample_report: ReportData, tmp_path: Path
+    ) -> None:
         path = engine.save(sample_report, tmp_path / "report.html")
         assert path.exists()
         content = path.read_text()
         assert "<!DOCTYPE html>" in content
 
-    def test_save_auto_detect_format(self, engine: ExportEngine, sample_report: ReportData, tmp_path: Path) -> None:
+    def test_save_auto_detect_format(
+        self, engine: ExportEngine, sample_report: ReportData, tmp_path: Path
+    ) -> None:
         path = engine.save(sample_report, tmp_path / "report.json")
         assert path.exists()
         data = json.loads(path.read_text())
         assert "header" in data
 
-    def test_save_unsupported_format(self, engine: ExportEngine, sample_report: ReportData, tmp_path: Path) -> None:
+    def test_save_unsupported_format(
+        self, engine: ExportEngine, sample_report: ReportData, tmp_path: Path
+    ) -> None:
         with pytest.raises(ValueError, match="Unsupported"):
             engine.save(sample_report, tmp_path / "report.xyz")
 

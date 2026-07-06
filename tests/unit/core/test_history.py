@@ -19,6 +19,7 @@ from uni.core.history.repository import (
 # Fixtures
 # ---------------------------------------------------------------------------
 
+
 @pytest.fixture
 async def repo(tmp_path: Path) -> HistoryRepository:
     """Create and initialize a temporary repository."""
@@ -78,6 +79,7 @@ def sample_error() -> ErrorRecord:
 # Initialization
 # ---------------------------------------------------------------------------
 
+
 class TestInitialization:
     @pytest.mark.asyncio
     async def test_initialize_creates_db(self, tmp_path: Path) -> None:
@@ -102,9 +104,12 @@ class TestInitialization:
 # Measurements
 # ---------------------------------------------------------------------------
 
+
 class TestMeasurements:
     @pytest.mark.asyncio
-    async def test_save_and_get(self, repo: HistoryRepository, sample_measurement: MeasurementRecord) -> None:
+    async def test_save_and_get(
+        self, repo: HistoryRepository, sample_measurement: MeasurementRecord
+    ) -> None:
         row_id = await repo.save_measurement(sample_measurement)
         assert row_id > 0
 
@@ -119,7 +124,9 @@ class TestMeasurements:
         assert await repo.get_measurement(99999) is None
 
     @pytest.mark.asyncio
-    async def test_list_measurements(self, repo: HistoryRepository, sample_measurement: MeasurementRecord) -> None:
+    async def test_list_measurements(
+        self, repo: HistoryRepository, sample_measurement: MeasurementRecord
+    ) -> None:
         await repo.save_measurement(sample_measurement)
         results = await repo.get_measurements()
         assert len(results) == 1
@@ -150,13 +157,17 @@ class TestMeasurements:
         assert results[0].target_host == "b"
 
     @pytest.mark.asyncio
-    async def test_count(self, repo: HistoryRepository, sample_measurement: MeasurementRecord) -> None:
+    async def test_count(
+        self, repo: HistoryRepository, sample_measurement: MeasurementRecord
+    ) -> None:
         assert await repo.count_measurements() == 0
         await repo.save_measurement(sample_measurement)
         assert await repo.count_measurements() == 1
 
     @pytest.mark.asyncio
-    async def test_delete(self, repo: HistoryRepository, sample_measurement: MeasurementRecord) -> None:
+    async def test_delete(
+        self, repo: HistoryRepository, sample_measurement: MeasurementRecord
+    ) -> None:
         await repo.save_measurement(sample_measurement)
         deleted = await repo.delete_measurements("10.0.0.1")
         assert deleted == 1
@@ -179,9 +190,12 @@ class TestMeasurements:
 # Servers
 # ---------------------------------------------------------------------------
 
+
 class TestServers:
     @pytest.mark.asyncio
-    async def test_save_and_get(self, repo: HistoryRepository, sample_server: ServerRecord) -> None:
+    async def test_save_and_get(
+        self, repo: HistoryRepository, sample_server: ServerRecord
+    ) -> None:
         await repo.save_server(sample_server)
         record = await repo.get_server("10.0.0.1", 27015)
         assert record is not None
@@ -189,7 +203,9 @@ class TestServers:
         assert record.app_id == 730
 
     @pytest.mark.asyncio
-    async def test_upsert(self, repo: HistoryRepository, sample_server: ServerRecord) -> None:
+    async def test_upsert(
+        self, repo: HistoryRepository, sample_server: ServerRecord
+    ) -> None:
         await repo.save_server(sample_server)
         # Update player count
         sample_server.player_count = 15
@@ -209,21 +225,29 @@ class TestServers:
 
     @pytest.mark.asyncio
     async def test_search(self, repo: HistoryRepository) -> None:
-        await repo.save_server(ServerRecord(host="1.2.3.4", port=27015, name="Faceit Server"))
-        await repo.save_server(ServerRecord(host="5.6.7.8", port=27015, name="Random Server"))
+        await repo.save_server(
+            ServerRecord(host="1.2.3.4", port=27015, name="Faceit Server")
+        )
+        await repo.save_server(
+            ServerRecord(host="5.6.7.8", port=27015, name="Random Server")
+        )
 
         results = await repo.search_servers("Faceit")
         assert len(results) == 1
         assert results[0].name == "Faceit Server"
 
     @pytest.mark.asyncio
-    async def test_count(self, repo: HistoryRepository, sample_server: ServerRecord) -> None:
+    async def test_count(
+        self, repo: HistoryRepository, sample_server: ServerRecord
+    ) -> None:
         assert await repo.count_servers() == 0
         await repo.save_server(sample_server)
         assert await repo.count_servers() == 1
 
     @pytest.mark.asyncio
-    async def test_delete(self, repo: HistoryRepository, sample_server: ServerRecord) -> None:
+    async def test_delete(
+        self, repo: HistoryRepository, sample_server: ServerRecord
+    ) -> None:
         await repo.save_server(sample_server)
         deleted = await repo.delete_server("10.0.0.1", 27015)
         assert deleted is True
@@ -234,12 +258,17 @@ class TestServers:
 # Rankings
 # ---------------------------------------------------------------------------
 
+
 class TestRankings:
     @pytest.mark.asyncio
     async def test_save_and_get(self, repo: HistoryRepository) -> None:
         ranking = RankingRecord(
-            host="10.0.0.1", port=27015, timestamp=time.time(),
-            final_score=0.95, rank=1, total_servers=5,
+            host="10.0.0.1",
+            port=27015,
+            timestamp=time.time(),
+            final_score=0.95,
+            rank=1,
+            total_servers=5,
         )
         row_id = await repo.save_ranking(ranking)
         assert row_id > 0
@@ -252,14 +281,24 @@ class TestRankings:
     async def test_latest_rankings(self, repo: HistoryRepository) -> None:
         # Save two ranking snapshots
         for i in range(3):
-            await repo.save_ranking(RankingRecord(
-                host=f"10.0.0.{i}", port=27015,
-                timestamp=100.0, final_score=0.9 - i * 0.1, rank=i + 1,
-            ))
-        await repo.save_ranking(RankingRecord(
-            host="10.0.0.9", port=27015,
-            timestamp=200.0, final_score=0.99, rank=1,
-        ))
+            await repo.save_ranking(
+                RankingRecord(
+                    host=f"10.0.0.{i}",
+                    port=27015,
+                    timestamp=100.0,
+                    final_score=0.9 - i * 0.1,
+                    rank=i + 1,
+                )
+            )
+        await repo.save_ranking(
+            RankingRecord(
+                host="10.0.0.9",
+                port=27015,
+                timestamp=200.0,
+                final_score=0.99,
+                rank=1,
+            )
+        )
 
         latest = await repo.get_latest_rankings()
         assert len(latest) == 1
@@ -276,9 +315,12 @@ class TestRankings:
 # Errors
 # ---------------------------------------------------------------------------
 
+
 class TestErrors:
     @pytest.mark.asyncio
-    async def test_save_and_get(self, repo: HistoryRepository, sample_error: ErrorRecord) -> None:
+    async def test_save_and_get(
+        self, repo: HistoryRepository, sample_error: ErrorRecord
+    ) -> None:
         row_id = await repo.save_error(sample_error)
         assert row_id > 0
 
@@ -287,7 +329,9 @@ class TestErrors:
         assert results[0].error_type == "timeout"
 
     @pytest.mark.asyncio
-    async def test_mark_resolved(self, repo: HistoryRepository, sample_error: ErrorRecord) -> None:
+    async def test_mark_resolved(
+        self, repo: HistoryRepository, sample_error: ErrorRecord
+    ) -> None:
         row_id = await repo.save_error(sample_error)
         updated = await repo.mark_error_resolved(row_id)
         assert updated is True
@@ -298,13 +342,17 @@ class TestErrors:
     @pytest.mark.asyncio
     async def test_filter_by_type(self, repo: HistoryRepository) -> None:
         await repo.save_error(ErrorRecord(timestamp=1.0, error_type="timeout"))
-        await repo.save_error(ErrorRecord(timestamp=2.0, error_type="connection_refused"))
+        await repo.save_error(
+            ErrorRecord(timestamp=2.0, error_type="connection_refused")
+        )
 
         results = await repo.get_errors(error_type="timeout")
         assert len(results) == 1
 
     @pytest.mark.asyncio
-    async def test_count(self, repo: HistoryRepository, sample_error: ErrorRecord) -> None:
+    async def test_count(
+        self, repo: HistoryRepository, sample_error: ErrorRecord
+    ) -> None:
         assert await repo.count_errors() == 0
         await repo.save_error(sample_error)
         assert await repo.count_errors() == 1
@@ -331,6 +379,7 @@ class TestErrors:
 # Statistics
 # ---------------------------------------------------------------------------
 
+
 class TestStats:
     @pytest.mark.asyncio
     async def test_empty_stats(self, repo: HistoryRepository) -> None:
@@ -341,9 +390,13 @@ class TestStats:
 
     @pytest.mark.asyncio
     async def test_populated_stats(self, repo: HistoryRepository) -> None:
-        await repo.save_measurement(MeasurementRecord(
-            target_host="a", avg_rtt=15.0, quality_score=0.9,
-        ))
+        await repo.save_measurement(
+            MeasurementRecord(
+                target_host="a",
+                avg_rtt=15.0,
+                quality_score=0.9,
+            )
+        )
         await repo.save_server(ServerRecord(host="b", port=80))
         await repo.save_error(ErrorRecord(error_type="timeout"))
 

@@ -8,9 +8,9 @@ import re
 # Pattern for IP:Port or [IPv6]:Port
 _TARGET_PATTERN = re.compile(
     r"^(?P<host>"
-    r"(?:\d{1,3}\.){3}\d{1,3}"          # IPv4
+    r"(?:\d{1,3}\.){3}\d{1,3}"  # IPv4
     r"|(?:[0-9a-fA-F:]+:+)+[0-9a-fA-F]+"  # IPv6
-    r"|[\w.-]+"                           # hostname
+    r"|[\w.-]+"  # hostname
     r")"
     r":(?P<port>\d{1,5})$"
 )

@@ -13,6 +13,7 @@ GITHUB_API_URL = "https://api.github.com/repos/{owner}/{repo}/releases/latest"
 @dataclass(frozen=True, slots=True)
 class ReleaseInfo:
     """Information about a GitHub release."""
+
     version: str
     url: str
     body: str

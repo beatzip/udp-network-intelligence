@@ -55,10 +55,20 @@ class HistoryView(QWidget):
         # Measurements tab
         self._measurements_table = QTableWidget()
         self._measurements_table.setColumnCount(10)
-        self._measurements_table.setHorizontalHeaderLabels([
-            "Host", "Port", "Mode", "Sent", "Received", "Loss%",
-            "Avg RTT", "Jitter", "Grade", "Duration"
-        ])
+        self._measurements_table.setHorizontalHeaderLabels(
+            [
+                "Host",
+                "Port",
+                "Mode",
+                "Sent",
+                "Received",
+                "Loss%",
+                "Avg RTT",
+                "Jitter",
+                "Grade",
+                "Duration",
+            ]
+        )
         self._measurements_table.horizontalHeader().setSectionResizeMode(
             QHeaderView.ResizeMode.Stretch
         )
@@ -68,9 +78,9 @@ class HistoryView(QWidget):
         # Errors tab
         self._errors_table = QTableWidget()
         self._errors_table.setColumnCount(5)
-        self._errors_table.setHorizontalHeaderLabels([
-            "Time", "Host", "Type", "Message", "Resolved"
-        ])
+        self._errors_table.setHorizontalHeaderLabels(
+            ["Time", "Host", "Type", "Message", "Resolved"]
+        )
         self._errors_table.horizontalHeader().setSectionResizeMode(
             QHeaderView.ResizeMode.Stretch
         )
@@ -107,17 +117,35 @@ class HistoryView(QWidget):
         """
         self._measurements_table.setRowCount(len(data))
         for i, m in enumerate(data):
-            self._measurements_table.setItem(i, 0, QTableWidgetItem(str(m.get("target_host", ""))))
-            self._measurements_table.setItem(i, 1, QTableWidgetItem(str(m.get("target_port", ""))))
-            self._measurements_table.setItem(i, 2, QTableWidgetItem(str(m.get("mode", ""))))
-            self._measurements_table.setItem(i, 3, QTableWidgetItem(str(m.get("sent", ""))))
-            self._measurements_table.setItem(i, 4, QTableWidgetItem(str(m.get("received", ""))))
+            self._measurements_table.setItem(
+                i, 0, QTableWidgetItem(str(m.get("target_host", "")))
+            )
+            self._measurements_table.setItem(
+                i, 1, QTableWidgetItem(str(m.get("target_port", "")))
+            )
+            self._measurements_table.setItem(
+                i, 2, QTableWidgetItem(str(m.get("mode", "")))
+            )
+            self._measurements_table.setItem(
+                i, 3, QTableWidgetItem(str(m.get("sent", "")))
+            )
+            self._measurements_table.setItem(
+                i, 4, QTableWidgetItem(str(m.get("received", "")))
+            )
             loss = f"{int(str(m.get('lost', 0))) / max(1, int(str(m.get('sent', 1)))) * 100:.1f}%"
             self._measurements_table.setItem(i, 5, QTableWidgetItem(loss))
-            self._measurements_table.setItem(i, 6, QTableWidgetItem(f"{m.get('avg_rtt', 0):.1f}"))
-            self._measurements_table.setItem(i, 7, QTableWidgetItem(f"{m.get('jitter', 0):.1f}"))
-            self._measurements_table.setItem(i, 8, QTableWidgetItem(str(m.get("quality_grade", ""))))
-            self._measurements_table.setItem(i, 9, QTableWidgetItem(f"{m.get('duration_seconds', 0):.1f}s"))
+            self._measurements_table.setItem(
+                i, 6, QTableWidgetItem(f"{m.get('avg_rtt', 0):.1f}")
+            )
+            self._measurements_table.setItem(
+                i, 7, QTableWidgetItem(f"{m.get('jitter', 0):.1f}")
+            )
+            self._measurements_table.setItem(
+                i, 8, QTableWidgetItem(str(m.get("quality_grade", "")))
+            )
+            self._measurements_table.setItem(
+                i, 9, QTableWidgetItem(f"{m.get('duration_seconds', 0):.1f}s")
+            )
         self._status_label.setText(f"{len(data)} measurements loaded")
 
     def update_errors(self, data: list[dict[str, object]]) -> None:
@@ -128,9 +156,15 @@ class HistoryView(QWidget):
         """
         self._errors_table.setRowCount(len(data))
         for i, e in enumerate(data):
-            self._errors_table.setItem(i, 0, QTableWidgetItem(str(e.get("timestamp", ""))))
+            self._errors_table.setItem(
+                i, 0, QTableWidgetItem(str(e.get("timestamp", "")))
+            )
             self._errors_table.setItem(i, 1, QTableWidgetItem(str(e.get("host", ""))))
-            self._errors_table.setItem(i, 2, QTableWidgetItem(str(e.get("error_type", ""))))
-            self._errors_table.setItem(i, 3, QTableWidgetItem(str(e.get("error_message", ""))))
+            self._errors_table.setItem(
+                i, 2, QTableWidgetItem(str(e.get("error_type", "")))
+            )
+            self._errors_table.setItem(
+                i, 3, QTableWidgetItem(str(e.get("error_message", "")))
+            )
             resolved = "Yes" if e.get("resolved") else "No"
             self._errors_table.setItem(i, 4, QTableWidgetItem(resolved))

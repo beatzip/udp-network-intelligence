@@ -30,8 +30,8 @@ class HistoryViewModel(BaseViewModel):
     """
 
     measurements_updated = Signal(list)  # list of measurement dicts
-    errors_updated = Signal(list)        # list of error dicts
-    export_ready = Signal(str, str)      # (filename, content)
+    errors_updated = Signal(list)  # list of error dicts
+    export_ready = Signal(str, str)  # (filename, content)
 
     def __init__(self, repo: HistoryRepository | None = None) -> None:
         super().__init__()
@@ -54,12 +54,8 @@ class HistoryViewModel(BaseViewModel):
         """
         if self._repo is None:
             return
-        self._measurements = await self._repo.get_measurements(
-            host=host, limit=limit
-        )
-        self.measurements_updated.emit(
-            [m.to_dict() for m in self._measurements]
-        )
+        self._measurements = await self._repo.get_measurements(host=host, limit=limit)
+        self.measurements_updated.emit([m.to_dict() for m in self._measurements])
 
     async def load_errors(self, limit: int = 100) -> None:
         """Load error records from the database.

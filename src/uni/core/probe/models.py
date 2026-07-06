@@ -94,17 +94,13 @@ class ProbeResult:
     def __post_init__(self) -> None:
         """Validate probe result fields."""
         if self.sequence < 0:
-            raise ValueError(
-                f"ProbeResult.sequence must be >= 0, got {self.sequence}"
-            )
+            raise ValueError(f"ProbeResult.sequence must be >= 0, got {self.sequence}")
         if self.status == ProbeStatus.SUCCESS and self.rtt_ms is None:
             raise ValueError(
                 "ProbeResult.rtt_ms must not be None when status is SUCCESS"
             )
         if self.rtt_ms is not None and self.rtt_ms < 0:
-            raise ValueError(
-                f"ProbeResult.rtt_ms must be >= 0, got {self.rtt_ms}"
-            )
+            raise ValueError(f"ProbeResult.rtt_ms must be >= 0, got {self.rtt_ms}")
         if self.response_size < 0:
             raise ValueError(
                 f"ProbeResult.response_size must be >= 0, got {self.response_size}"
@@ -374,9 +370,7 @@ class ProbeConfig:
         if not self.host or not self.host.strip():
             raise ValueError("ProbeConfig.host must not be empty")
         if not (1 <= self.port <= 65535):
-            raise ValueError(
-                f"ProbeConfig.port must be 1-65535, got {self.port}"
-            )
+            raise ValueError(f"ProbeConfig.port must be 1-65535, got {self.port}")
         if self.count < 1:
             raise ValueError(f"ProbeConfig.count must be >= 1, got {self.count}")
         if self.interval < 0.01:
@@ -384,17 +378,13 @@ class ProbeConfig:
                 f"ProbeConfig.interval must be >= 0.01, got {self.interval}"
             )
         if self.timeout <= 0:
-            raise ValueError(
-                f"ProbeConfig.timeout must be > 0, got {self.timeout}"
-            )
+            raise ValueError(f"ProbeConfig.timeout must be > 0, got {self.timeout}")
         if not (1 <= self.payload_size <= 1400):
             raise ValueError(
                 f"ProbeConfig.payload_size must be 1-1400, got {self.payload_size}"
             )
         if self.ttl < 0 or self.ttl > 255:
-            raise ValueError(
-                f"ProbeConfig.ttl must be 0-255, got {self.ttl}"
-            )
+            raise ValueError(f"ProbeConfig.ttl must be 0-255, got {self.ttl}")
 
     @property
     def target(self) -> str:

@@ -85,15 +85,11 @@ class ProbeRecord:
         if self.sent < 0:
             raise ValueError(f"ProbeRecord.sent must be >= 0, got {self.sent}")
         if self.received < 0:
-            raise ValueError(
-                f"ProbeRecord.received must be >= 0, got {self.received}"
-            )
+            raise ValueError(f"ProbeRecord.received must be >= 0, got {self.received}")
         if self.lost < 0:
             raise ValueError(f"ProbeRecord.lost must be >= 0, got {self.lost}")
         if self.min_rtt < 0:
-            raise ValueError(
-                f"ProbeRecord.min_rtt must be >= 0, got {self.min_rtt}"
-            )
+            raise ValueError(f"ProbeRecord.min_rtt must be >= 0, got {self.min_rtt}")
         if self.max_rtt < self.min_rtt and self.sent > 0:
             raise ValueError(
                 f"ProbeRecord.max_rtt ({self.max_rtt}) < min_rtt ({self.min_rtt})"

@@ -57,9 +57,7 @@ class AnomalyEvent:
     def __post_init__(self) -> None:
         """Validate anomaly event fields."""
         if not (1 <= self.severity <= 5):
-            raise ValueError(
-                f"AnomalyEvent.severity must be 1-5, got {self.severity}"
-            )
+            raise ValueError(f"AnomalyEvent.severity must be 1-5, got {self.severity}")
         if self.threshold <= 0:
             raise ValueError(
                 f"AnomalyEvent.threshold must be > 0, got {self.threshold}"

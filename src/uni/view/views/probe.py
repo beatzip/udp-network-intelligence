@@ -129,7 +129,11 @@ class ProbeView(QWidget):
         """
         self._progress.setMaximum(total)
         self._progress.setValue(current)
-        self._status.setText(f"Probe {current}/{total} — RTT: {rtt:.1f}ms" if rtt >= 0 else f"Probe {current}/{total} — timeout")
+        self._status.setText(
+            f"Probe {current}/{total} — RTT: {rtt:.1f}ms"
+            if rtt >= 0
+            else f"Probe {current}/{total} — timeout"
+        )
 
         if rtt >= 0:
             self._latency_chart.add_point(rtt)

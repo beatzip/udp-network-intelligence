@@ -82,7 +82,9 @@ class MainWindow(QMainWindow):
         view_menu = menubar.addMenu("View")
         for name, idx in self.PAGES.items():
             action = QAction(name.capitalize(), self)
-            action.triggered.connect(lambda checked, i=idx: self._stack.setCurrentIndex(i))
+            action.triggered.connect(
+                lambda checked, i=idx: self._stack.setCurrentIndex(i)
+            )
             view_menu.addAction(action)
 
         # Help menu
@@ -98,7 +100,9 @@ class MainWindow(QMainWindow):
 
         for name, idx in self.PAGES.items():
             action = QAction(name.capitalize(), self)
-            action.triggered.connect(lambda checked, i=idx: self._stack.setCurrentIndex(i))
+            action.triggered.connect(
+                lambda checked, i=idx: self._stack.setCurrentIndex(i)
+            )
             toolbar.addAction(action)
 
     def _setup_statusbar(self) -> None:

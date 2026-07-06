@@ -114,21 +114,15 @@ class SocketConfig:
         if not self.host:
             raise ValueError("SocketConfig.host must not be empty")
         if not (0 <= self.port <= 65535):
-            raise ValueError(
-                f"SocketConfig.port must be 0-65535, got {self.port}"
-            )
+            raise ValueError(f"SocketConfig.port must be 0-65535, got {self.port}")
         if self.timeout <= 0:
-            raise ValueError(
-                f"SocketConfig.timeout must be > 0, got {self.timeout}"
-            )
+            raise ValueError(f"SocketConfig.timeout must be > 0, got {self.timeout}")
         if self.buffer_size < 256:
             raise ValueError(
                 f"SocketConfig.buffer_size must be >= 256, got {self.buffer_size}"
             )
         if not (0 <= self.ttl <= 255):
-            raise ValueError(
-                f"SocketConfig.ttl must be 0-255, got {self.ttl}"
-            )
+            raise ValueError(f"SocketConfig.ttl must be 0-255, got {self.ttl}")
         if self.send_buffer_size < 256:
             raise ValueError(
                 f"SocketConfig.send_buffer_size must be >= 256, "
