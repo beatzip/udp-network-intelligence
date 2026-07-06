@@ -2,32 +2,20 @@
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import pytest
 
-# Ensure QApplication exists before any widget imports
-_qapp = None
-
-
-def _ensure_qapp() -> None:
-    global _qapp
-    if _qapp is None:
-        from PySide6.QtWidgets import QApplication
-        _qapp = QApplication.instance() or QApplication(sys.argv)
-
-
-_ensure_qapp()
+pytest.importorskip("PySide6", reason="PySide6 required for chart tests")
 
 from uni.view.widgets.chart import (
     BaseChart,
+    ChartPanel,
     HistoryChart,
     JitterChart,
     LossChart,
     RTTChart,
     StatsSummary,
-    ChartPanel,
 )
 
 

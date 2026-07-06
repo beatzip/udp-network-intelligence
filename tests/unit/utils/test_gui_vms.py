@@ -6,6 +6,8 @@ from pathlib import Path
 
 import pytest
 
+pytest.importorskip("PySide6", reason="PySide6 required for ViewModel tests")
+
 from uni.core.history.repository import (
     ErrorRecord,
     HistoryRepository,

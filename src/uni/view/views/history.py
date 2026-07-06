@@ -99,7 +99,7 @@ class HistoryView(QWidget):
         dialog.export_requested.connect(self.export_requested.emit)
         dialog.exec()
 
-    def update_measurements(self, data: list[dict]) -> None:
+    def update_measurements(self, data: list[dict[str, object]]) -> None:
         """Update the measurements table.
 
         Args:
@@ -112,7 +112,7 @@ class HistoryView(QWidget):
             self._measurements_table.setItem(i, 2, QTableWidgetItem(str(m.get("mode", ""))))
             self._measurements_table.setItem(i, 3, QTableWidgetItem(str(m.get("sent", ""))))
             self._measurements_table.setItem(i, 4, QTableWidgetItem(str(m.get("received", ""))))
-            loss = f"{m.get('lost', 0) / max(1, m.get('sent', 1)) * 100:.1f}%"
+            loss = f"{int(str(m.get('lost', 0))) / max(1, int(str(m.get('sent', 1)))) * 100:.1f}%"
             self._measurements_table.setItem(i, 5, QTableWidgetItem(loss))
             self._measurements_table.setItem(i, 6, QTableWidgetItem(f"{m.get('avg_rtt', 0):.1f}"))
             self._measurements_table.setItem(i, 7, QTableWidgetItem(f"{m.get('jitter', 0):.1f}"))
@@ -120,7 +120,7 @@ class HistoryView(QWidget):
             self._measurements_table.setItem(i, 9, QTableWidgetItem(f"{m.get('duration_seconds', 0):.1f}s"))
         self._status_label.setText(f"{len(data)} measurements loaded")
 
-    def update_errors(self, data: list[dict]) -> None:
+    def update_errors(self, data: list[dict[str, object]]) -> None:
         """Update the errors table.
 
         Args:

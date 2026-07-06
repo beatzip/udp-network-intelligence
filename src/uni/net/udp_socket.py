@@ -263,7 +263,7 @@ class AsyncUDPSocket:
     def local_addr(self) -> tuple[str, int]:
         """Local address the socket is bound to."""
         if self._transport:
-            return self._transport.get_extra_info("sockname", ("", 0))
+            return tuple(self._transport.get_extra_info("sockname", ("", 0)))
         return self._bound_addr
 
     @property
@@ -316,7 +316,7 @@ class AsyncUDPSocket:
             loop = asyncio.get_running_loop()
             self._protocol = _UDPProtocol()
             transport, _protocol = await loop.create_datagram_endpoint(
-                lambda: self._protocol,
+                lambda: self._protocol,  # type: ignore[type-var]
                 sock=sock,
             )
             self._transport = transport

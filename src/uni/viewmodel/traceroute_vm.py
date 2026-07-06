@@ -28,14 +28,14 @@ class TracerouteViewModel(BaseViewModel):
     def __init__(self) -> None:
         super().__init__()
         self._running = False
-        self._hops: list[dict] = []
+        self._hops: list[dict[str, object]] = []
 
     @property
     def is_running(self) -> bool:
         return self._running
 
     @property
-    def hops(self) -> list[dict]:
+    def hops(self) -> list[dict[str, object]]:
         return list(self._hops)
 
     async def run_traceroute(
@@ -62,7 +62,8 @@ class TracerouteViewModel(BaseViewModel):
             import struct
 
             from uni.net.icmp_socket import AsyncICMPSocket
-            from uni.net.udp_socket import AsyncUDPSocket, SocketConfig
+            from uni.net.models import SocketConfig
+            from uni.net.udp_socket import AsyncUDPSocket
 
             target_ip = socket.gethostbyname(host)
 

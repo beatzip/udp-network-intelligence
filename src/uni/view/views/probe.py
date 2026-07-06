@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from uni.view.widgets.chart import JitterChart, LatencyChart, LossChart
+from uni.view.widgets.chart import JitterChart, LossChart, RTTChart
 from uni.view.widgets.target_input import TargetInput
 
 
@@ -89,7 +89,7 @@ class ProbeView(QWidget):
 
         # Charts
         charts_layout = QHBoxLayout()
-        self._latency_chart = LatencyChart()
+        self._latency_chart = RTTChart()
         self._loss_chart = LossChart()
         self._jitter_chart = JitterChart()
         charts_layout.addWidget(self._latency_chart)
@@ -134,7 +134,7 @@ class ProbeView(QWidget):
         if rtt >= 0:
             self._latency_chart.add_point(rtt)
 
-    def complete(self, result: dict) -> None:
+    def complete(self, result: dict[str, object]) -> None:
         """Called when probe completes."""
         self._start_btn.setEnabled(True)
         self._stop_btn.setEnabled(False)

@@ -16,7 +16,6 @@ Example::
 from __future__ import annotations
 
 import logging
-import time
 from pathlib import Path
 from typing import Any
 
@@ -54,7 +53,7 @@ _COLOR_GRID = "#313244"
 # Base chart
 # ---------------------------------------------------------------------------
 
-class BaseChart(pg.PlotWidget):
+class BaseChart(pg.PlotWidget):  # type: ignore[misc]
     """Base class for all real-time charts.
 
     Provides:
@@ -201,7 +200,7 @@ class BaseChart(pg.PlotWidget):
 
         path = Path(filepath)
         path.parent.mkdir(parents=True, exist_ok=True)
-        image.save(str(path), "PNG")
+        image.save(str(path))
         logger.info("Chart exported to %s", path)
 
     def reset(self) -> None:
@@ -479,7 +478,9 @@ class StatsSummary(QWidget):
         v_layout.addWidget(value_label)
 
         self._labels[key] = (title_label, value_label)
-        self.layout().addWidget(container)
+        lay = self.layout()
+        if lay is not None:
+            lay.addWidget(container)
 
     def update_metric(self, key: str, value: str, color: str = "#cdd6f4") -> None:
         """Update a metric value.
@@ -498,7 +499,7 @@ class StatsSummary(QWidget):
 
     def clear(self) -> None:
         """Reset all metrics to default."""
-        for key, (_, value_label) in self._labels.items():
+        for _key, (_, value_label) in self._labels.items():
             value_label.setText("—")
             value_label.setStyleSheet(
                 "color: #cdd6f4; font-size: 16px; font-weight: bold;"

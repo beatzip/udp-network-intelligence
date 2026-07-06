@@ -35,7 +35,8 @@ from uni.core.probe.models import (
     ProbeStats,
     ProbeStatus,
 )
-from uni.net.udp_socket import AsyncUDPSocket, SendResult, SocketConfig
+from uni.net.models import SocketConfig
+from uni.net.udp_socket import AsyncUDPSocket, SendResult
 
 logger = logging.getLogger(__name__)
 
@@ -740,7 +741,7 @@ class ProbeEngine:
         completed = await asyncio.gather(*tasks, return_exceptions=True)
 
         for i, res in enumerate(completed):
-            if isinstance(res, Exception):
+            if isinstance(res, BaseException):
                 result.failed += 1
                 target = targets[i]
                 result.results.append(

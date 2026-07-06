@@ -128,7 +128,7 @@ class ICMPReceivedMessage:
             codes = {}
         return codes.get(self.code, f"Code {self.code}")
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, object]:
         """Serialize to JSON-compatible dictionary."""
         return {
             "icmp_type": self.icmp_type,
@@ -325,12 +325,12 @@ class AsyncICMPSocket:
         if platform.system() == "Windows":
             try:
                 import ctypes
-                return ctypes.windll.shell32.IsUserAnAdmin() != 0  # type: ignore[attr-defined]
+                return bool(ctypes.windll.shell32.IsUserAnAdmin())
             except (AttributeError, OSError):
                 return False
         else:
             import os
-            return os.geteuid() == 0
+            return int(os.geteuid()) == 0  # type: ignore[attr-defined]
 
     async def open(self) -> None:
         """Open the ICMP socket.
@@ -364,7 +364,7 @@ class AsyncICMPSocket:
             loop = asyncio.get_running_loop()
             self._protocol = _ICMPProtocol()
             transport, _ = await loop.create_datagram_endpoint(
-                lambda: self._protocol,
+                lambda: self._protocol,  # type: ignore[type-var]
                 sock=sock,
             )
             self._transport = transport

@@ -21,11 +21,12 @@ def is_admin() -> bool:
     if is_windows():
         try:
             import ctypes
-            return ctypes.windll.shell32.IsUserAnAdmin() != 0  # type: ignore[attr-defined]
+
+            return bool(ctypes.windll.shell32.IsUserAnAdmin())
         except (AttributeError, OSError):
             return False
     else:
-        return os.geteuid() == 0
+        return int(os.geteuid()) == 0  # type: ignore[attr-defined]
 
 
 def get_executable_dir() -> Path:

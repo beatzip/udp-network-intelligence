@@ -33,7 +33,7 @@ def format_bytes(value: int | float, decimals: int = 1) -> str:
     for unit in ("B", "KB", "MB", "GB", "TB"):
         if abs(value) < 1024.0:
             return f"{value:.{decimals}f} {unit}"
-        value /= 1024.0  # type: ignore[assignment]
+        value /= 1024.0
     return f"{value:.{decimals}f} PB"
 
 

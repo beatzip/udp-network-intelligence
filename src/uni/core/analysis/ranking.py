@@ -256,7 +256,7 @@ def normalize_loss(loss_rate: float, exponent: float = 2.0) -> float:
     Returns:
         Score in [0.0, 1.0].
     """
-    return max(0.0, min(1.0, (1.0 - loss_rate) ** exponent))
+    return float(max(0.0, min(1.0, (1.0 - loss_rate) ** exponent)))
 
 
 def normalize_jitter(

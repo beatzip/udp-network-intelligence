@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class ManagedTask:
     """Wrapper around an asyncio Task with metadata."""
     name: str
-    task: asyncio.Task[Any]  # type: ignore[type-arg]
+    task: asyncio.Task[Any]
 
 
 class TaskManager:
@@ -31,7 +31,7 @@ class TaskManager:
         self,
         name: str,
         coro: Coroutine[Any, Any, Any],
-    ) -> asyncio.Task[Any]:  # type: ignore[type-arg]
+    ) -> asyncio.Task[Any]:
         """Create and track a named background task.
 
         Args:

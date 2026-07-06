@@ -570,7 +570,7 @@ class Packet:
         return len(self.data)
 
     @property
-    def is_empty(self) -> True:
+    def is_empty(self) -> bool:
         """True if the packet has no data."""
         return len(self.data) == 0
 

@@ -78,7 +78,7 @@ class DiscoveryView(QWidget):
             self._status.setStyleSheet("color: #facc15;")
             self.query_requested.emit(target[0], target[1])
 
-    def display_result(self, result: dict) -> None:
+    def display_result(self, result: dict[str, object]) -> None:
         """Display query result.
 
         Args:

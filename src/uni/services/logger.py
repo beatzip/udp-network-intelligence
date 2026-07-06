@@ -763,8 +763,10 @@ def setup_logging(
         manager.setup(config)
     else:
         cfg = LogConfig(
-            level=_resolve_level(level) if isinstance(level, int) else level,
-            console_level=_resolve_level(level) if isinstance(level, int) else level,
+            level=str(_resolve_level(level) if isinstance(level, int) else level),
+            console_level=str(
+                _resolve_level(level) if isinstance(level, int) else level
+            ),
             log_file=log_file or "logs/uni.log",
             max_bytes=max_bytes,
             backup_count=backup_count,

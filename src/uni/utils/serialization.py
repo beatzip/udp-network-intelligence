@@ -119,8 +119,8 @@ def _restore_value(value: Any, expected_type: Any) -> Any:
         return value
 
     # Handle dict[K, V]
-    if origin is dict and len(args) == 2:
-        _key_type, val_type = args
+    if origin is dict and args:
+        val_type = args[1] if len(args) > 1 else object
         if isinstance(value, dict):
             return {k: _restore_value(v, val_type) for k, v in value.items()}
         return value
@@ -164,7 +164,9 @@ def _restore_value(value: Any, expected_type: Any) -> Any:
     # Nested dataclass
     if hasattr(expected_type, "__dataclass_fields__"):
         if isinstance(value, dict):
-            return model_from_dict(expected_type, value)  # type: ignore[arg-type]
+            from typing import cast
+
+            return model_from_dict(cast("type", expected_type), value)
         return value
 
     # int, float, str, bool
@@ -194,20 +196,22 @@ def model_from_dict(cls: type[T], data: dict[str, Any]) -> T:
         TypeError: If cls is not a dataclass.
         KeyError: If required fields are missing.
     """
+    from typing import cast
+
     if not hasattr(cls, "__dataclass_fields__"):
         raise TypeError(f"{cls.__name__} is not a dataclass")
 
     hints = get_type_hints(cls)
     kwargs: dict[str, Any] = {}
 
-    for f in fields(cls):
+    for f in fields(cast("type", cls)):
         if f.name not in data:
             continue
         raw = data[f.name]
         target_type = hints.get(f.name, object)
         kwargs[f.name] = _restore_value(raw, target_type)
 
-    return cls(**kwargs)  # type: ignore[call-arg]
+    return cls(**kwargs)
 
 
 def to_json(

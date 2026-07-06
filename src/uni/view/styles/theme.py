@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
+from typing import cast
 
 from PySide6.QtWidgets import QApplication
 
@@ -34,8 +35,8 @@ class ThemeManager:
         if qss_file.exists():
             qss = qss_file.read_text(encoding="utf-8")
             app = QApplication.instance()
-            if app:
-                app.setStyleSheet(qss)
+            if app is not None:
+                cast("QApplication", app).setStyleSheet(qss)
             self._current_theme = theme
             logger.info("Theme applied: %s", theme)
         else:

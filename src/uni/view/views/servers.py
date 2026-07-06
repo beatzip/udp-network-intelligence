@@ -99,8 +99,12 @@ class ServersView(QWidget):
         if row < 0:
             QMessageBox.information(self, "Delete", "Select a server first.")
             return
-        host = self._table.item(row, 0).text()
-        port = int(self._table.item(row, 1).text())
+        host_item = self._table.item(row, 0)
+        port_item = self._table.item(row, 1)
+        if host_item is None or port_item is None:
+            return
+        host = host_item.text()
+        port = int(port_item.text())
         reply = QMessageBox.question(
             self, "Delete Server",
             f"Delete {host}:{port}?",
@@ -114,7 +118,7 @@ class ServersView(QWidget):
         if target:
             self.query_server_requested.emit(target[0], target[1])
 
-    def update_servers(self, servers: list[dict]) -> None:
+    def update_servers(self, servers: list[dict[str, object]]) -> None:
         """Update the server table.
 
         Args:

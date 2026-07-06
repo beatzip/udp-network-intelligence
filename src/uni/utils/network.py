@@ -26,7 +26,7 @@ def get_local_ip() -> str:
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         try:
             sock.connect(("8.8.8.8", 80))
-            return sock.getsockname()[0]
+            return str(sock.getsockname()[0])
         finally:
             sock.close()
     except OSError:
@@ -62,7 +62,7 @@ def list_interfaces() -> list[NetworkInterface]:
         addrs = socket.getaddrinfo(hostname, None, socket.AF_INET)
         seen: set[str] = set()
         for info in addrs:
-            addr = info[4][0]
+            addr = str(info[4][0])
             if addr not in seen and addr != "127.0.0.1":
                 seen.add(addr)
                 interfaces.append(NetworkInterface(name=hostname, address=addr))

@@ -315,7 +315,7 @@ class SourceQuery:
 
             # Wait for response
             try:
-                data, _ = await asyncio.wait_for(
+                data: bytes = await asyncio.wait_for(
                     loop.sock_recv(sock, 4096),
                     timeout=timeout,
                 )
@@ -336,7 +336,7 @@ class SourceQuery:
                 sock.sendto(challenge_request.encode(), addr)
 
                 try:
-                    data2, _ = await asyncio.wait_for(
+                    data2: bytes = await asyncio.wait_for(
                         loop.sock_recv(sock, 4096),
                         timeout=timeout,
                     )

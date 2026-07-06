@@ -87,7 +87,7 @@ class TracerouteView(QWidget):
             self._table.setRowCount(0)
             self.traceroute_requested.emit(target[0], target[1])
 
-    def add_hop(self, hop: dict) -> None:
+    def add_hop(self, hop: dict[str, object]) -> None:
         """Add a hop row to the table.
 
         Args:
@@ -106,7 +106,7 @@ class TracerouteView(QWidget):
         self._progress.setMaximum(total)
         self._progress.setValue(current)
 
-    def complete(self, result: dict) -> None:
+    def complete(self, result: dict[str, object]) -> None:
         """Called when traceroute completes."""
         self._trace_btn.setEnabled(True)
         self._stop_btn.setEnabled(False)

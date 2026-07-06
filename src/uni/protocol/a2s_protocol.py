@@ -296,7 +296,7 @@ class WireResponse:
     def challenge_number(self) -> int:
         """Extract challenge number from challenge response payload."""
         if len(self.payload) >= 4:
-            return struct.unpack("<i", self.payload[:4])[0]
+            return int(struct.unpack("<i", self.payload[:4])[0])
         return -1
 
 
@@ -373,7 +373,7 @@ class _ByteReader:
         Returns:
             Integer value.
         """
-        return struct.unpack("<H", self.read_bytes(2))[0]
+        return int(struct.unpack("<H", self.read_bytes(2))[0])
 
     def read_int32(self) -> int:
         """Read a little-endian signed 32-bit integer.
@@ -381,7 +381,7 @@ class _ByteReader:
         Returns:
             Integer value.
         """
-        return struct.unpack("<i", self.read_bytes(4))[0]
+        return int(struct.unpack("<i", self.read_bytes(4))[0])
 
     def read_uint32(self) -> int:
         """Read a little-endian unsigned 32-bit integer.
@@ -389,7 +389,7 @@ class _ByteReader:
         Returns:
             Integer value.
         """
-        return struct.unpack("<I", self.read_bytes(4))[0]
+        return int(struct.unpack("<I", self.read_bytes(4))[0])
 
     def read_int64(self) -> int:
         """Read a little-endian signed 64-bit integer.
@@ -397,7 +397,7 @@ class _ByteReader:
         Returns:
             Integer value.
         """
-        return struct.unpack("<q", self.read_bytes(8))[0]
+        return int(struct.unpack("<q", self.read_bytes(8))[0])
 
     def read_float32(self) -> float:
         """Read a little-endian 32-bit float.
@@ -405,7 +405,7 @@ class _ByteReader:
         Returns:
             Float value.
         """
-        return struct.unpack("<f", self.read_bytes(4))[0]
+        return float(struct.unpack("<f", self.read_bytes(4))[0])
 
     def read_null_terminated_string(self) -> str:
         """Read a null-terminated string.
@@ -741,16 +741,16 @@ class A2SQueryProtocol(BaseProtocol):
     # Encode methods
     # ------------------------------------------------------------------
 
-    def encode_request(self, **kwargs: Any) -> WireRequest:
+    def encode_request(self, **kwargs: Any) -> bytes:
         """Encode a generic A2S request.
 
         Args:
             **kwargs: Forwarded to ``encode_info_request``.
 
         Returns:
-            WireRequest ready for sending.
+            Encoded packet bytes.
         """
-        return self.encode_info_request(**kwargs)
+        return self.encode_info_request(**kwargs).encode()
 
     def encode_info_request(self, challenge: int = -1) -> WireRequest:
         """Build an A2S_INFO request packet.
@@ -897,7 +897,7 @@ class A2SQueryProtocol(BaseProtocol):
         if not self.is_challenge_response(data):
             return -1
         if len(data) >= 9:
-            return struct.unpack("<i", data[5:9])[0]
+            return int(struct.unpack("<i", data[5:9])[0])
         return -1
 
     def get_response_type_name(self, data: bytes) -> str:
@@ -974,9 +974,9 @@ class A2SQueryProtocol(BaseProtocol):
             return "Source Engine"
         if info.app_id == 0 and info.protocol == 15:
             return "GoldSource"
-        known = KNOWN_APPIDS.get(info.app_id)
-        if known:
-            return f"Source Engine ({known})"
+        engine_name = KNOWN_APPIDS.get(info.app_id)
+        if engine_name is not None:
+            return f"Source Engine ({engine_name})"
         if info.folder in ("csgo", "cs2"):
             return "Source 2"
         return "Unknown Engine"

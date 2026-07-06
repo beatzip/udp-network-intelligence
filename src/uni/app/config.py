@@ -429,7 +429,7 @@ class AppConfig:
             else:
                 kwargs[section_name] = section_cls()
 
-        return cls(**kwargs)  # type: ignore[call-arg]
+        return cls(**kwargs)
 
 
 # ---------------------------------------------------------------------------
@@ -851,7 +851,7 @@ class ConfigManager:
         """
         raw_text = self.config_path.read_text(encoding="utf-8")
         try:
-            return json.loads(raw_text)
+            return json.loads(raw_text)  # type: ignore[no-any-return]
         except json.JSONDecodeError as exc:
             logger.error("Invalid JSON in config file: %s", exc)
             raise
