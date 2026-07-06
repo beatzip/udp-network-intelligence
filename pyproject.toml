@@ -1,0 +1,133 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "udp-network-intelligence"
+version = "6.0.0"
+description = "Professional UDP network diagnostics tool for gaming servers"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+authors = [{ name = "UDP Network Intelligence Contributors" }]
+keywords = ["udp", "network", "diagnostics", "gaming", "cs2", "traceroute"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: Microsoft :: Windows :: Windows 10",
+    "Operating System :: Microsoft :: Windows :: Windows 11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: System :: Networking :: Monitoring",
+    "Topic :: Games/Entertainment",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    "pyside6>=6.6.0",
+    "pyside6-essentials>=6.6.0",
+]
+
+[project.optional-dependencies]
+geo = ["geoip2>=4.7.0"]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=5.0.0",
+    "ruff>=0.5.0",
+    "mypy>=1.10.0",
+    "pre-commit>=3.7.0",
+]
+all = ["udp-network-intelligence[geo,dev]"]
+
+[project.scripts]
+uni = "uni.app.main:main"
+
+[project.urls]
+Homepage = "https://github.com/udp-network-intelligence/udp-network-intelligence"
+Repository = "https://github.com/udp-network-intelligence/udp-network-intelligence"
+Issues = "https://github.com/udp-network-intelligence/udp-network-intelligence/issues"
+Changelog = "https://github.com/udp-network-intelligence/udp-network-intelligence/blob/main/docs/CHANGELOG.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/uni"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/uni"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-v --tb=short --strict-markers"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "network: marks tests requiring network access",
+    "admin: marks tests requiring administrator privileges",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",     # pycodestyle errors
+    "W",     # pycodestyle warnings
+    "F",     # pyflakes
+    "I",     # isort
+    "N",     # pep8-naming
+    "UP",    # pyupgrade
+    "B",     # flake8-bugbear
+    "A",     # flake8-builtins
+    "C4",    # flake8-comprehensions
+    "DTZ",   # flake8-datetimez
+    "T20",   # flake8-print
+    "SIM",   # flake8-simplify
+    "TCH",   # flake8-type-checking
+    "ARG",   # flake8-unused-arguments
+    "RUF",   # ruff-specific rules
+]
+ignore = [
+    "T201",   # allow print() for now (CLI output)
+    "TC003",  # allow type-checking block imports (Phase 0)
+    "UP047",  # allow TypeVar for now (Phase 0)
+    "B027",   # allow empty methods in ABC (stub phase)
+    "RUF002", # allow en-dash in docstrings
+    "RUF009", # allow field() in dataclass defaults
+    "SIM102", # allow nested if (clearer for complex conditions)
+    "SIM105", # allow try-except-pass (clearer for cleanup code)
+    "ARG002", # allow unused method args (protocol callbacks)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["ARG001", "RUF059", "RUF043", "E501"]  # unused args/vars in tests, long lines OK
+"src/uni/protocol/**" = ["F841"]  # unused vars needed to advance binary reader position
+"src/uni/protocol/base.py" = ["N818"]  # ProtocolTimeout naming
+"src/uni/core/history/**" = ["E501", "RUF005"]  # SQL strings naturally long, params concat OK
+"src/uni/view/**" = ["E501", "RUF012", "ARG005"]  # Qt view code: long lines OK, mutable class attrs OK, Qt signal lambdas OK
+"src/uni/viewmodel/**" = ["TC001"]  # ViewModel imports are runtime, not just type hints
+
+[tool.ruff.lint.isort]
+known-first-party = ["uni"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+show_error_codes = true
+files = ["src", "tests"]
+ignore_missing_imports = true
