@@ -111,6 +111,7 @@ ignore = [
 "src/uni/core/history/**" = ["E501", "RUF005"]  # SQL strings naturally long, params concat OK
 "src/uni/view/**" = ["E501", "RUF012", "ARG005"]  # Qt view code: long lines OK, mutable class attrs OK, Qt signal lambdas OK
 "src/uni/viewmodel/**" = ["TC001"]  # ViewModel imports are runtime, not just type hints
+"src/uni/app/main.py" = ["TC001"]  # MainWindow import needed at runtime for cast
 
 [tool.ruff.lint.isort]
 known-first-party = ["uni"]

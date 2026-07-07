@@ -17,7 +17,9 @@ from uni.app.constants import APP_NAME, APP_VERSION
 from uni.view.dialogs.about import AboutDialog
 from uni.view.views.dashboard import DashboardView
 from uni.view.views.history import HistoryView
+from uni.view.views.probe import ProbeView
 from uni.view.views.servers import ServersView
+from uni.view.views.traceroute import TracerouteView
 from uni.view.widgets.status_indicator import StatusIndicator
 
 
@@ -32,8 +34,10 @@ class MainWindow(QMainWindow):
 
     PAGES = {
         "dashboard": 0,
-        "servers": 1,
-        "history": 2,
+        "probe": 1,
+        "traceroute": 2,
+        "servers": 3,
+        "history": 4,
     }
 
     def __init__(self) -> None:
@@ -58,10 +62,14 @@ class MainWindow(QMainWindow):
 
         # Create pages
         self._dashboard_view = DashboardView()
+        self._probe_view = ProbeView()
+        self._traceroute_view = TracerouteView()
         self._servers_view = ServersView()
         self._history_view = HistoryView()
 
         self._stack.addWidget(self._dashboard_view)
+        self._stack.addWidget(self._probe_view)
+        self._stack.addWidget(self._traceroute_view)
         self._stack.addWidget(self._servers_view)
         self._stack.addWidget(self._history_view)
 
@@ -96,6 +104,13 @@ class MainWindow(QMainWindow):
     def _setup_toolbar(self) -> None:
         toolbar = QToolBar("Main Toolbar")
         toolbar.setMovable(False)
+        toolbar.setStyleSheet(
+            "QToolBar { background-color: #11111b; } "
+            "QToolButton { color: #cdd6f4; padding: 6px 12px; "
+            "font-size: 13px; } "
+            "QToolButton:hover { background-color: #313244; } "
+            "QToolButton:pressed { background-color: #45475a; }"
+        )
         self.addToolBar(toolbar)
 
         for name, idx in self.PAGES.items():
@@ -126,6 +141,16 @@ class MainWindow(QMainWindow):
         return self._dashboard_view
 
     @property
+    def probe_view(self) -> ProbeView:
+        """Access the probe view."""
+        return self._probe_view
+
+    @property
+    def traceroute_view(self) -> TracerouteView:
+        """Access the traceroute view."""
+        return self._traceroute_view
+
+    @property
     def servers_view(self) -> ServersView:
         """Access the servers view."""
         return self._servers_view
@@ -149,7 +174,7 @@ class MainWindow(QMainWindow):
         """Navigate to a named page.
 
         Args:
-            page: Page name ('dashboard', 'servers', 'history').
+            page: Page name ('dashboard', 'probe', 'traceroute', 'servers', 'history').
         """
         idx = self.PAGES.get(page, 0)
         self._stack.setCurrentIndex(idx)

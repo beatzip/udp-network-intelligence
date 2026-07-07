@@ -215,9 +215,13 @@ class BaseChart(pg.PlotWidget):
 
     def reset(self) -> None:
         """Reset all chart data and remove curves."""
+        self.clear_data()
+
+    def clear_data(self) -> None:
+        """Clear data arrays without removing the curve from the plot."""
         self._values.clear()
         self._timestamps.clear()
-        self.clear()
+        self._update_plot()
         # Re-add the main curve after clear()
         self._curve = self.plot(pen=self._pen, name=self._title_text)
 

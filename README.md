@@ -1,103 +1,325 @@
-# UDP Network Intelligence v6
+# 🎮 A2S
 
-Professional UDP network diagnostics tool for gaming servers (CS2, Faceit, WarmupServer, BrutalCS, Cybershoke, Xplay, and custom servers).
+<div align="center">
 
-## Features
+### Современный анализатор игровых серверов Source Engine
 
-- **UDP Probe Engine** — Normal / Deep / Aggressive testing modes with configurable intervals
-- **Server Testing** — Parallel multi-target testing with Rate Limiter and Retry Strategy
-- **Valve Source Query** — A2S_INFO, A2S_PLAYER, A2S_RULES with challenge handshake, Source Engine, Source 2, CS2, GoldSource
-- **Statistics** — RTT, Mean, Median, Variance, StdDev, Percentiles (p50/p75/p90/p95/p99), EMA, Moving Average
-- **Prediction Engine** — Connection probability, stability, quality score, rating (1-5 stars), confidence (all formulas documented)
-- **Ranking Engine** — Multi-criteria server ranking with weighted scoring (RTT, loss, jitter, success rate, history, confidence)
-- **History** — SQLite persistence for measurements, servers, rankings, errors
-- **Charts** — pyqtgraph real-time RTT/Loss/Jitter charts with zoom, pan, export PNG
-- **Export** — JSON, CSV, HTML with unified report structure
-- **GUI** — PySide6 MVVM architecture, Dark Theme, thread-safe async operations
+Проверка качества соединения • A2S Info • Traceroute • История • Аналитика
 
-## Requirements
+![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge\&logo=python\&logoColor=white)
+![PySide6](https://img.shields.io/badge/PySide6-Qt-41CD52?style=for-the-badge\&logo=qt\&logoColor=white)
+![Windows](https://img.shields.io/badge/Windows-10%20%2F%2011-0078D6?style=for-the-badge\&logo=windows)
+![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
 
-- Windows 10/11
-- Python 3.12+
-- Administrator privileges (for ICMP/raw sockets)
+</div>
 
-## Installation
+---
+
+# 📖 Описание
+
+**A2S** — это настольное приложение для диагностики игровых серверов на базе Source Engine.
+
+Программа помогает быстро определить качество соединения с игровым сервером, получить информацию по протоколу **A2S**, выполнить трассировку маршрута, просмотреть статистику и сохранить результаты всех проверок.
+
+Подходит для:
+
+* Counter-Strike 2
+* Counter-Strike: Source
+* Team Fortress 2
+* Left 4 Dead
+* Garry's Mod
+* других игр, использующих протокол A2S
+
+---
+
+# ✨ Возможности
+
+## 📡 Probe
+
+Проверка качества соединения.
+
+Отображает:
+
+* RTT (Ping)
+* Packet Loss
+* Jitter
+* Среднее время отклика
+* Минимальный и максимальный RTT
+* Оценку качества соединения
+* Графики в реальном времени
+
+---
+
+## 🌍 Traceroute
+
+Позволяет определить маршрут до игрового сервера.
+
+Показывает:
+
+* список узлов;
+* задержку на каждом переходе;
+* место возникновения проблем с маршрутизацией.
+
+---
+
+## 🖥 Servers
+
+Получение информации по протоколу A2S.
+
+Поддерживаются:
+
+* название сервера;
+* карта;
+* количество игроков;
+* максимальное количество игроков;
+* игра;
+* версия;
+* AppID;
+* дополнительные параметры сервера.
+
+---
+
+## 📊 Dashboard
+
+Единая панель аналитики.
+
+Содержит:
+
+* статистику проверок;
+* средний RTT;
+* Packet Loss;
+* Jitter;
+* количество серверов;
+* количество выполненных измерений;
+* графики качества соединения.
+
+---
+
+## 🕓 History
+
+Автоматически сохраняет результаты всех проверок.
+
+Позволяет:
+
+* просматривать историю;
+* фильтровать результаты;
+* анализировать изменения качества соединения.
+
+---
+
+# 🖼 Интерфейс
+
+После добавления изображений замените пути ниже.
+
+```text
+docs/images/dashboard.png
+docs/images/probe.png
+docs/images/servers.png
+docs/images/history.png
+```
+
+---
+
+# ⚡ Быстрый старт
+
+## 1. Скачать проект
 
 ```bash
-git clone https://github.com/udp-network-intelligence/udp-network-intelligence.git
+git clone https://github.com/beatzip/udp-network-intelligence.git
+```
+
+или скачайте ZIP через кнопку **Code → Download ZIP**.
+
+---
+
+## 2. Распаковать архив
+
+Если скачивали ZIP, распакуйте его в любую папку.
+
+Например:
+
+```text
+C:\udp-network-intelligence
+```
+
+---
+
+## 3. Запустить программу
+
+Cборка:
+
+```text
+powershell.exe
+```
+
+или
+
+```text
+cmd.exe
+```
+
+---
+
+ Открыть папку с проектом в терминале:
+
 cd udp-network-intelligence
-pip install -e ".[dev]"
-```
-
-## Usage
 
 ```bash
-# Run the application
-python -m uni.app.main
-
-# Or use the installed entry point
-uni
-```
-
-## Development
-
-```bash
-# Install dev dependencies
-pip install -e ".[dev]"
-
-# Run tests
-pytest
-
-# Run linter
-ruff check src/ tests/
-
-# Format code
-ruff format src/ tests/
-
-# Type check
-mypy src/
-```
-
-## Build Windows EXE
-
-```bash
-# Install PyInstaller
+pip install -e .
 pip install pyinstaller
-
-# Build executable
-pyinstaller --name uni --onefile --windowed src/uni/app/main.py
-
-# Or use the build script
-python build.py
+py build.py
+```
+```text
+Запустить dist\uni.exe
 ```
 
-## Project Structure
+---
 
+# 📡 Использование
+
+## Проверка сервера
+
+1. Откройте вкладку **Probe**.
+2. Введите IP-адрес сервера.
+3. При необходимости измените порт.
+4. Нажмите **Start**.
+5. Дождитесь окончания проверки.
+
+После завершения будут показаны:
+
+* RTT;
+* Packet Loss;
+* Jitter;
+* итоговая оценка;
+* графики;
+* статистика.
+
+---
+
+## Получение информации о сервере
+
+1. Перейдите во вкладку **Servers**.
+2. Добавьте IP сервера.
+3. Нажмите кнопку обновления.
+
+Если сервер поддерживает A2S, информация загрузится автоматически.
+
+---
+
+## Traceroute
+
+1. Перейдите во вкладку **Traceroute**.
+2. Введите IP.
+3. Нажмите **Trace**.
+
+---
+
+# 📂 Структура проекта
+
+```text
+A2S/
+
+├── src/
+├── config/
+├── data/
+├── logs/
+├── tests/
+├── docs/
+├── README.md
+└── main.py
 ```
-src/uni/
-├── app/           # Application bootstrap, lifecycle, config
-├── core/          # Domain logic
-│   ├── probe/     # UDP probe engine
-│   ├── analysis/  # Statistics, prediction, ranking
-│   ├── history/   # SQLite persistence
-│   └── export/    # JSON/CSV/HTML export
-├── net/           # Network layer (async UDP/ICMP sockets)
-├── protocol/      # Wire protocol (A2S, Source Query)
-├── plugins/       # Plugin system
-├── view/          # PySide6 GUI (views, widgets, dialogs)
-├── viewmodel/     # MVVM ViewModels
-├── services/      # EventBus, TaskManager, Logger
-└── utils/         # Shared utilities
-```
 
-## Architecture
+---
 
-- **MVVM** — PySide6 Views ↔ ViewModels ↔ Domain
-- **AsyncIO** — Fully asynchronous network operations
-- **EventBus** — Decoupled inter-module communication
-- **SQLite** — Local history persistence
-- **pyqtgraph** — High-performance real-time charts
+# ⚙ Требования
 
-## License
+* Windows 10
+* Windows 11
+* Python 3.12+ (для запуска из исходников)
 
-MIT License — see [LICENSE](LICENSE) for details.
+---
+
+# ❓ Частые вопросы
+
+### Программа не запускается
+
+Попробуйте:
+
+* запустить от имени администратора;
+* проверить антивирус;
+* разрешить программу в брандмауэре Windows;
+* использовать последнюю версию.
+
+---
+
+### Сервер не отвечает
+
+Проверьте:
+
+* правильность IP;
+* правильность порта;
+* доступность сервера;
+* поддержку протокола A2S.
+
+---
+
+### Не отображается информация о сервере
+
+Некоторые игровые серверы:
+
+* ограничивают A2S-запросы;
+* требуют Challenge Response;
+* могут временно не отвечать.
+
+---
+
+# 🐞 Сообщение об ошибке
+
+При создании Issue желательно приложить:
+
+* описание проблемы;
+* последовательность действий;
+* скриншоты;
+* содержимое папки `logs`;
+* версию Windows;
+* версию приложения.
+
+---
+
+# 🛣 Roadmap
+
+* [ ] Улучшение графиков
+* [ ] Поддержка IPv6
+* [ ] Экспорт результатов в CSV
+* [ ] Экспорт результатов в JSON
+* [ ] Сравнение нескольких серверов
+* [ ] Автоматический мониторинг
+* [ ] Геолокация серверов
+* [ ] История изменений качества соединения
+
+---
+
+# 🤝 Вклад в проект
+
+Если вы хотите помочь развитию проекта:
+
+1. Сделайте Fork.
+2. Создайте новую ветку.
+3. Внесите изменения.
+4. Отправьте Pull Request.
+
+---
+
+# 📄 Лицензия
+
+Проект распространяется по лицензии **MIT**.
+
+---
+
+<div align="center">
+
+### ⭐ Если проект оказался полезным — поставьте звезду на GitHub!
+
+Это помогает развитию проекта и мотивирует продолжать работу.
+
+</div>
