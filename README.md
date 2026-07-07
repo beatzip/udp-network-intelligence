@@ -109,13 +109,7 @@
 
 # 🖼 Интерфейс
 
-После добавления изображений замените пути ниже.
 
-```text
-docs/images/dashboard.png
-docs/images/probe.png
-docs/images/servers.png
-docs/images/history.png
 ```
 
 ---
