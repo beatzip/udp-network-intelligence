@@ -139,5 +139,6 @@ ignore_missing_imports = true
 module = [
     "uni.view.*",
     "uni.viewmodel.*",
+    "uni.app.main",
 ]
 disable_error_code = ["misc"]
